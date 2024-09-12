@@ -324,13 +324,34 @@ if defender_full_health:
     defender_soldier_hp = defender_soldier_max_hp_per_unit * 10  # 总血量为最大血量 * 10
     st.write(f"守方士兵当前总血量: {defender_soldier_hp}（满血）")
 else:
-    defender_soldier_hp = st.number_input("守方士兵当前总血量", min_value=0, value=0)  # 不满血时用户可以输入总血量
+    defender_soldier_hp = st.text_input("守方士兵当前总血量", "0") # 不满血时用户可以输入总血量
+    if defender_soldier_hp == "":
+        defender_soldier_hp = 0
+    else:
+        # 计算守方英雄当前血量
+        nums = re.findall(r"\d+", defender_soldier_hp)
+        nums = [int(num) for num in nums]
+        defender_soldier_hp = eval(defender_soldier_hp)
+    # 守方英雄当前血量最小为1
+    if defender_soldier_hp <= 0:
+        defender_soldier_hp = 0
     defender_soldier_count = math.ceil(defender_soldier_hp / defender_soldier_max_hp_per_unit)  # 计算守方士兵数量
 
 #分割线
 st.divider()
 
-defender_hero_hp = st.number_input("守方英雄当前血量", min_value=1,value=1)
+#定义守方英雄当前血量
+defender_hero_hp = st.text_input("守方英雄当前血量","1")
+if defender_hero_hp == "":
+    defender_hero_hp= 0
+else:
+#计算守方英雄当前血量
+    nums = re.findall(r"\d+", defender_hero_hp )
+    nums = [int(num) for num in nums]
+    defender_hero_hp = eval(defender_hero_hp)
+#守方英雄当前血量最小为1
+if defender_hero_hp <=1:
+    defender_hero_hp = 1
 
 #分割线
 st.divider()
@@ -451,10 +472,17 @@ defender_hero_remaining_hp = max(0, defender_hero_remaining_hp - soldier_to_hero
 # 士兵后续打士兵的实际段数: remaining_soldier_to_soldier_segments_used
 # 士兵后续打英雄的段数: remaining_soldier_to_hero_segments
 
-st.write(f"士兵打士兵的段数: {soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used}")
-st.write(f"士兵打英雄的段数: {soldier_to_hero_segments + remaining_soldier_to_hero_segments}")
-st.write(f"英雄打士兵的段数: {hero_to_soldier_segments_used}")
-st.write(f"英雄打英雄的段数: {hero_to_hero_segments}")
+column91, column92, column93 = st.columns([1,0.1,1])
+with column91:
+    st.write(f"士兵打士兵的段数: {soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used} ")
+    st.write(f"士兵打英雄的段数: {soldier_to_hero_segments + remaining_soldier_to_hero_segments} ")
+    st.write(f"英雄打士兵的段数: {hero_to_soldier_segments_used} ")
+    st.write(f"英雄打英雄的段数: {hero_to_hero_segments} ")
+with column93:
+    st.write(f"士兵打士兵伤害: {(soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used) * soldier_to_soldier_damage}")
+    st.write(f"士兵打英雄伤害: {(soldier_to_hero_segments + remaining_soldier_to_hero_segments) * soldier_to_hero_damage}")
+    st.write(f"英雄打士兵伤害:{hero_to_soldier_segments_used * hero_to_soldier_damage}")
+    st.write(f"英雄打英雄伤害: {hero_to_hero_segments * hero_to_hero_damage}")
 
 # 分割线
 st.divider()
@@ -474,6 +502,12 @@ dd_zsh = (soldier_to_soldier_damage * soldier_to_soldier_segments_used +
           soldier_to_soldier_damage * remaining_soldier_to_soldier_segments_used +
           soldier_to_hero_damage * remaining_soldier_to_hero_segments)
 
+dd_dsb_sh = (soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used)*soldier_to_soldier_damage + hero_to_soldier_segments_used*hero_to_soldier_damage
+dd_dyx_sh = (soldier_to_hero_segments + remaining_soldier_to_hero_segments)*soldier_to_hero_damage + hero_to_hero_segments*hero_to_hero_damage
+
 st.markdown(f"##### 本次单点总伤害 <strong><span style='color:blue;font-size:25px;'>{dd_zsh}</span></strong>", unsafe_allow_html=True)
+
+st.markdown(f"###### 其中：对士兵造成伤害 <strong><span style='color:gray;font-size:20px;'>{dd_dsb_sh}</span></strong>", unsafe_allow_html=True)
+st.markdown(f"###### 其中：对英雄造成伤害 <strong><span style='color:gray;font-size:20px;'>{dd_dyx_sh}</span></strong>", unsafe_allow_html=True)
 
 
