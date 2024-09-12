@@ -49,9 +49,12 @@ with column1:
             # 定义攻方士兵技能倍率
             gf_sbjnbl = st.text_input("攻方士兵技能倍率", "1")
             gf_sbjnbl = mb_shuru(gf_sbjnbl)
-        # 定义攻方士兵通用增伤
-        gf_sb_tyzs = st.text_input("攻方士兵通用增伤%", "0")
-        gf_sb_tyzs = bfb_shuru(gf_sb_tyzs)
+        # 定义攻方士兵物理通用增伤
+        gf_sb_wl_tyzs = st.text_input("攻方士兵物理通用增伤%", "0")
+        gf_sb_wl_tyzs = bfb_shuru(gf_sb_wl_tyzs)
+        # 定义攻方士兵魔法通用增伤
+        gf_sb_mf_tyzs = st.text_input("攻方士兵魔法通用增伤%", "0")
+        gf_sb_mf_tyzs = bfb_shuru(gf_sb_mf_tyzs)
         column13, column14 = st.columns([1, 1])
         with column13:
             # 定义攻方士兵技能增伤
@@ -88,9 +91,12 @@ with column1:
             # 定义攻方英雄技能倍率
             gf_yxjnbl = st.text_input("攻方英雄技能倍率", "1")
             gf_yxjnbl = mb_shuru(gf_yxjnbl)
-        # 定义攻方英雄通用增伤
-        gf_yx_tyzs = st.text_input("攻方英雄通用增伤%", "0")
-        gf_yx_tyzs = bfb_shuru(gf_yx_tyzs)
+        # 定义攻方英雄物理通用增伤
+        gf_yx_wl_tyzs = st.text_input("攻方英雄物理通用增伤%", "0")
+        gf_yx_wl_tyzs = bfb_shuru(gf_yx_wl_tyzs)
+        # 定义攻方英雄魔法通用增伤
+        gf_yx_mf_tyzs = st.text_input("攻方英雄魔法通用增伤%", "0")
+        gf_yx_mf_tyzs = bfb_shuru(gf_yx_mf_tyzs)
         column23, column24 = st.columns([1, 1])
         with column23:
             # 定义攻方英雄技能增伤
@@ -129,9 +135,12 @@ with column3:
         # 定义守方士兵双防克制系数
         sf_sb_sfkzxs = st.text_input("守方士兵双防克制系数%", "0")
         sf_sb_sfkzxs = bfb_shuru(sf_sb_sfkzxs)
-        # 定义守方士兵通用减伤
-        sf_sb_tyjs = st.text_input("守方士兵通用减伤%", "0")
-        sf_sb_tyjs = bfb_shuru(sf_sb_tyjs)
+        # 定义守方士兵物理通用减伤
+        sf_sb_wl_tyjs = st.text_input("守方士兵物理通用减伤%", "0")
+        sf_sb_wl_tyjs = bfb_shuru(sf_sb_wl_tyjs)
+        # 定义守方士兵魔法通用减伤
+        sf_sb_mf_tyjs = st.text_input("守方士兵魔法通用减伤%", "0")
+        sf_sb_mf_tyjs = bfb_shuru(sf_sb_mf_tyjs)
         column33, column34 = st.columns([1, 1])
         with column33:
             # 定义守方士兵技能减伤
@@ -157,9 +166,12 @@ with column3:
         # 定义守方英雄双防克制系数
         sf_yx_sfkzxs = st.text_input("守方英雄双防克制系数%", "0")
         sf_yx_sfkzxs = bfb_shuru(sf_yx_sfkzxs)
-        # 定义守方英雄通用减伤
-        sf_yx_tyjs = st.text_input("守方英雄通用减伤%", "0")
-        sf_yx_tyjs = bfb_shuru(sf_yx_tyjs)
+        # 定义守方英雄物理通用减伤
+        sf_yx_wl_tyjs = st.text_input("守方英雄物理通用减伤%", "0")
+        sf_yx_wl_tyjs = bfb_shuru(sf_yx_wl_tyjs)
+        # 定义守方英雄魔法通用减伤
+        sf_yx_mf_tyjs = st.text_input("守方英雄魔法通用减伤%", "0")
+        sf_yx_mf_tyjs = bfb_shuru(sf_yx_mf_tyjs)
         column41, column42 = st.columns([1, 1])
         with column41:
             # 定义守方英雄技能减伤
@@ -214,17 +226,17 @@ st.divider()
 
 if sbsh_lx == "物理":
 #计算兵打兵物理伤害
-    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
+    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_wl_tyzs-sf_sb_wl_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄物理伤害
-    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
+    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_wl_tyzs- sf_yx_wl_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
     bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 else:
 #计算兵打兵魔法伤害
-    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
+    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_mf_tyzs-sf_sb_mf_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄魔法伤害
-    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
+    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_mf_tyzs- sf_yx_mf_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
     bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 
 #定义英雄打兵单段伤害 yxdb_dd_sh
@@ -232,19 +244,19 @@ else:
 #定义英雄打英雄单段伤害 yxdyx_dd_sh
 #定义英雄打英雄单段暴击伤害 yxdyx_ddbj_sh
 
-if sbsh_lx == "物理":
+if yxsh_lx == "物理":
 #计算英雄打兵物理伤害
-    yxdb_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
+    yxdb_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_wl_tyzs-sf_sb_wl_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
     yxdb_ddbj_sh = yxdb_dd_sh * (1.3+gf_yx_bs-sf_sb_jbs)
 #计算英雄打英雄物理伤害
-    yxdyx_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
+    yxdyx_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_wl_tyzs- sf_yx_wl_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
     yxdyx_ddbj_sh = yxdyx_dd_sh * (1.3+gf_yx_bs-sf_yx_jbs)
 else:
 #计算英雄打兵魔法伤害
-    yxdb_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
+    yxdb_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_mf_tyzs-sf_sb_mf_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
     yxdb_ddbj_sh = yxdb_dd_sh * (1.3+gf_yx_bs-sf_sb_jbs)
 #计算英雄打英雄魔法伤害
-    yxdyx_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
+    yxdyx_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_mf_tyzs- sf_yx_mf_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
     yxdyx_ddbj_sh = yxdyx_dd_sh * (1.3+gf_yx_bs-sf_yx_jbs)
 
 column4, column5, column6 = st.columns([1,0.1,1])
@@ -279,12 +291,12 @@ if bdb_sfbj:
 else:
     sj_bdyx_sh = round(bdyx_dd_sh)
 
-if bdb_sfbj:
+if yxdb_sfbj:
     sj_yxdb_sh = round(yxdb_ddbj_sh)
 else:
     sj_yxdb_sh = round(yxdb_dd_sh)
 
-if bdb_sfbj:
+if yxdyx_sfbj:
     sj_yxdyx_sh = round(yxdyx_ddbj_sh)
 else:
     sj_yxdyx_sh = round(yxdyx_dd_sh)
