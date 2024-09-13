@@ -1,5 +1,6 @@
 import math
 import streamlit as st
+import pandas as pd
 import re
 
 #定义面板输入函数
@@ -35,11 +36,24 @@ with column1:
         # 定义攻方士兵攻击
         gf_sbgj = st.text_input("攻方士兵攻击", "0")
         gf_sbgj = mb_shuru(gf_sbgj)
+
+        sb_bdb_kzpd = st.checkbox("兵与兵 有克制关系")
+        if sb_bdb_kzpd:
+            # 定义攻方士兵对士兵攻智克制系数
+            gf_sbdsb_gzkzxs = st.text_input("士兵对士兵攻智克制系数加成%", "0")
+            gf_sbdsb_gzkzxs = bfb_shuru(gf_sbdsb_gzkzxs)
+        else:
+            gf_sbdsb_gzkzxs = 0
+        sb_bdyx_kzpd = st.checkbox("兵与英雄 有克制关系")
+        if sb_bdyx_kzpd:
+            # 定义攻方士兵对英雄攻智克制系数
+            gf_sbdyx_gzkzxs = st.text_input("士兵对英雄攻智克制系数加成%", "0")
+            gf_sbdyx_gzkzxs = bfb_shuru(gf_sbdyx_gzkzxs)
+        else:
+            gf_sbdyx_gzkzxs = 0
+
         column11, column12 = st.columns([1, 1])
         with column11:
-            # 定义攻方士兵攻击克制系数
-            gf_sb_gjkzxs = st.text_input("士兵攻击克制系数%", "0")
-            gf_sb_gjkzxs = bfb_shuru(gf_sb_gjkzxs)
             # 选择物理还是魔法伤害
             sbsh_lx = st.radio("士兵伤害类型", ("物理", "魔法"))
         with column12:
@@ -57,13 +71,13 @@ with column1:
             # 定义攻方士兵技能增伤
             gf_sb_jnzs = st.text_input("攻方士兵技能增伤%", "0")
             gf_sb_jnzs = bfb_shuru(gf_sb_jnzs)
-            # 定义攻方士兵其他增伤
-            gf_sb_qtzs = st.text_input("攻方士兵其他增伤%", "0")
-            gf_sb_qtzs = bfb_shuru(gf_sb_qtzs)
-        with column14:
             # 定义攻方士兵远程增伤
             gf_sb_yczs = st.text_input("攻方士兵远程增伤%", "0")
             gf_sb_yczs = bfb_shuru(gf_sb_yczs)
+        with column14:
+            # 定义攻方士兵其他增伤
+            gf_sb_qtzs = st.text_input("攻方士兵其他增伤%", "0")
+            gf_sb_qtzs = bfb_shuru(gf_sb_qtzs)
             # 定义攻方士兵暴伤加成
             gf_sb_bs = st.text_input("攻方士兵暴伤加成%", "0")
             gf_sb_bs = bfb_shuru(gf_sb_bs)
@@ -74,11 +88,24 @@ with column1:
         # 定义攻方英雄智力
         gf_yxzl = st.text_input("攻方英雄智力", "0")
         gf_yxzl = mb_shuru(gf_yxzl)
+
+        yx_yxdb_kzpd = st.checkbox("英雄与兵 有克制关系")
+        if yx_yxdb_kzpd:
+            # 定义攻方英雄对士兵攻智克制系数
+            gf_yxdsb_gzkzxs = st.text_input("英雄对士兵攻智克制系数加成%", "0")
+            gf_yxdsb_gzkzxs = bfb_shuru(gf_yxdsb_gzkzxs)
+        else:
+            gf_yxdsb_gzkzxs = 0
+        yx_yxdyx_kzpd = st.checkbox("英雄与英雄 有克制关系")
+        if yx_yxdyx_kzpd:
+            # 定义攻方英雄对英雄攻智克制系数
+            gf_yxdyx_gzkzxs = st.text_input("英雄对英雄攻智克制系数加成%", "0")
+            gf_yxdyx_gzkzxs = bfb_shuru(gf_yxdyx_gzkzxs)
+        else:
+            gf_yxdyx_gzkzxs = 0
+
         column21, column22 = st.columns([1, 1])
         with column21:
-            # 定义攻方英雄攻击克制系数
-            gf_yx_gzkzxs = st.text_input("攻智克制系数%", "0")
-            gf_yx_gzkzxs = bfb_shuru(gf_yx_gzkzxs)
             # 选择物理还是魔法伤害
             yxsh_lx = st.radio("英雄伤害类型", ("物理", "魔法"))
         with column22:
@@ -96,13 +123,13 @@ with column1:
             # 定义攻方英雄技能增伤
             gf_yx_jnzs = st.text_input("攻方英雄技能增伤%", "0")
             gf_yx_jnzs = bfb_shuru(gf_yx_jnzs)
-            # 定义攻方英雄其他增伤
-            gf_yx_qtzs = st.text_input("攻方英雄其他增伤%", "0")
-            gf_yx_qtzs = bfb_shuru(gf_yx_qtzs)
-        with column24:
             # 定义攻方英雄远程增伤
             gf_yx_yczs = st.text_input("攻方英雄远程增伤%", "0")
             gf_yx_yczs = bfb_shuru(gf_yx_yczs)
+        with column24:
+            # 定义攻方英雄其他增伤
+            gf_yx_qtzs = st.text_input("攻方英雄其他增伤%", "0")
+            gf_yx_qtzs = bfb_shuru(gf_yx_qtzs)
             # 定义攻方英雄暴伤加成
             gf_yx_bs = st.text_input("攻方英雄暴伤加成%", "0")
             gf_yx_bs = bfb_shuru(gf_yx_bs)
@@ -126,9 +153,20 @@ with column3:
             # 定义守方士兵魔防
             sf_sbmf = st.text_input("守方士兵魔防", "0")
             sf_sbmf = mb_shuru(sf_sbmf)
-        # 定义守方士兵双防克制系数
-        sf_sb_sfkzxs = st.text_input("守方士兵双防克制系数%", "0")
-        sf_sb_sfkzxs = bfb_shuru(sf_sb_sfkzxs)
+
+        if sb_bdb_kzpd:
+            # 定义守方士兵与攻方士兵交战时双防克制系数加成
+            sf_sbdsb_sfkzxs = st.text_input("士兵与 攻方士兵 交战时双防克制系数加成%", "0")
+            sf_sbdsb_sfkzxs = bfb_shuru(sf_sbdsb_sfkzxs)
+        else:
+            sf_sbdsb_sfkzxs = 0
+        if yx_yxdb_kzpd:
+            # 定义守方士兵与攻方英雄交战时双防克制系数加成
+            sf_sbdyx_sfkzxs = st.text_input("士兵与 攻方英雄 交战时双防克制系数加成%", "0")
+            sf_sbdyx_sfkzxs = bfb_shuru(sf_sbdyx_sfkzxs)
+        else:
+            sf_sbdyx_sfkzxs = 0
+
         # 定义守方士兵物理通用减伤
         sf_sb_wl_tyjs = st.text_input("守方士兵物理通用减伤%", "0")
         sf_sb_wl_tyjs = bfb_shuru(sf_sb_wl_tyjs)
@@ -140,13 +178,13 @@ with column3:
             # 定义守方士兵技能减伤
             sf_sb_jnjs = st.text_input("守方士兵技能减伤%", "0")
             sf_sb_jnjs = bfb_shuru(sf_sb_jnjs)
-            # 定义守方士兵其他减伤
-            sf_sb_qtjs = st.text_input("守方士兵其他减伤%", "0")
-            sf_sb_qtjs = bfb_shuru(sf_sb_qtjs)
-        with column34:
             # 定义守方士兵远程减伤
             sf_sb_ycjs = st.text_input("守方士兵远程减伤%", "0")
             sf_sb_ycjs = bfb_shuru(sf_sb_ycjs)
+        with column34:
+            # 定义守方士兵其他减伤
+            sf_sb_qtjs = st.text_input("守方士兵其他减伤%", "0")
+            sf_sb_qtjs = bfb_shuru(sf_sb_qtjs)
             # 定义守方士兵减暴伤
             sf_sb_jbs = st.text_input("守方士兵减暴伤%", "0")
             sf_sb_jbs = bfb_shuru(sf_sb_jbs)
@@ -157,9 +195,20 @@ with column3:
         # 定义守方英雄魔防
         sf_yxmf = st.text_input("守方英雄魔防", "0")
         sf_yxmf = mb_shuru(sf_yxmf)
-        # 定义守方英雄双防克制系数
-        sf_yx_sfkzxs = st.text_input("守方英雄双防克制系数%", "0")
-        sf_yx_sfkzxs = bfb_shuru(sf_yx_sfkzxs)
+
+        if sb_bdyx_kzpd:
+            # 定义守方英雄与攻方士兵交战时双防克制系数加成
+            sf_yxdsb_sfkzxs = st.text_input("英雄与 攻方士兵 交战时双防克制系数加成%", "0")
+            sf_yxdsb_sfkzxs = bfb_shuru(sf_yxdsb_sfkzxs)
+        else:
+            sf_yxdsb_sfkzxs = 0
+        if yx_yxdyx_kzpd:
+            # 定义守方英雄与攻方英雄交战时双防克制系数加成
+            sf_yxdyx_sfkzxs = st.text_input("英雄与 攻方英雄 交战时双防克制系数加成%", "0")
+            sf_yxdyx_sfkzxs = bfb_shuru(sf_yxdyx_sfkzxs)
+        else:
+            sf_yxdyx_sfkzxs = 0
+
         # 定义守方英雄物理通用减伤
         sf_yx_wl_tyjs = st.text_input("守方英雄物理通用减伤%", "0")
         sf_yx_wl_tyjs = bfb_shuru(sf_yx_wl_tyjs)
@@ -171,13 +220,13 @@ with column3:
             # 定义守方英雄技能减伤
             sf_yx_jnjs = st.text_input("守方英雄技能减伤%", "0")
             sf_yx_jnjs = bfb_shuru(sf_yx_jnjs)
-            # 定义守方英雄其他减伤
-            sf_yx_qtjs = st.text_input("守方英雄其他减伤%", "0")
-            sf_yx_qtjs = bfb_shuru(sf_yx_qtjs)
-        with column42:
             # 定义守方英雄远程减伤
             sf_yx_ycjs = st.text_input("守方英雄远程减伤%", "0")
             sf_yx_ycjs = bfb_shuru(sf_yx_ycjs)
+        with column42:
+            # 定义守方英雄其他减伤
+            sf_yx_qtjs = st.text_input("守方英雄其他减伤%", "0")
+            sf_yx_qtjs = bfb_shuru(sf_yx_qtjs)
             # 定义守方英雄减暴伤
             sf_yx_jbs = st.text_input("守方英雄减暴伤%", "0")
             sf_yx_jbs = bfb_shuru(sf_yx_jbs)
@@ -210,6 +259,28 @@ with column3:
     # 输出地形修正
     st.write(f"守方地形修正为: <font color=red>{sf_dxxz*100}%</font>",unsafe_allow_html=True)
 
+# 分割线
+st.divider()
+
+with st.expander("（点击打开查看）神契晨曦之祝特效参考"):
+    chakan_sq = pd.DataFrame(
+        {"神契": ["菲依雅", "", "", "索尔", "", "", "海姆达尔", "", "", "巴德尔", "", "", "奥丁", "", "", "弗丽嘉", "",
+                  "", "提尔", "", "", "洛基", "", "", "维达", "", ""],
+         "神祈特效": ["主动进入战斗造成魔法伤害提升2%~8%", "主动进入战斗时，目标越远伤害越高，最高提升2%~8%",
+                      "主动进入战斗前未进行过移动，伤害提升2%~8%",
+                      "范围伤害提升2%~8%", "进入战斗暴击率提升2%~10%", "固定伤害提升2%~10%",
+                      "进入战斗遭受物理伤害降低2%~8%", "自身相邻有友军时，进入战斗遭受伤害降低1%~6%",
+                      "反击伤害提升2%~10%", "遭受范围伤害降低2%~8%", "受到固定伤害降低2%~10%",
+                      "主动进入战斗防御，魔防提升2%~8%", "主动进入战斗造成物理伤害提升2%~8%",
+                      "范围技能命中3名及以上敌军时造成伤害提升1%~6%", "进入战斗前移动越远伤害越高，最高提升2%~8%",
+                      "进入战斗时，目标越远遭受伤害越低，最多降低2%~8%", "进入战斗遭受魔法伤害降低2%~8%",
+                      "部队生命低于100%时，遭受范围伤害降低2%~8%", "与有弱化效果的敌军进入战斗时，造成物理伤害提升2%~8%",
+                      "与克制的敌军进入战斗时，造成物理伤害提升2%~8%", "进入战斗暴击伤害提升2%~10%",
+                      "与有弱化效果的敌军进入战斗时，造成魔法伤害提升2%~8%",
+                      "与克制的敌军进入战斗时，造成魔法伤害提升2%~8%", "进入战斗遭受暴击率降低2%~10%",
+                      "被近战攻击进入战斗时，遭受伤害降低2%~8%", "被远程攻击进入战斗时，遭受伤害降低1%~6%","进入战斗遭受暴击伤害降低2%~10%"]})
+    st.table(chakan_sq)
+
 #分割线
 st.divider()
 
@@ -220,17 +291,17 @@ st.divider()
 
 if sbsh_lx == "物理":
 #计算兵打兵物理伤害
-    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_wl_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
+    bdb_dd_sh = (gf_sbgj*(1+gf_sbdsb_gzkzxs) - sf_sbfy*(1+sf_sbdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_wl_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄物理伤害
-    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_wl_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
+    bdyx_dd_sh = (gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxfy*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_wl_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
     bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 else:
 #计算兵打兵魔法伤害
-    bdb_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_mf_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
+    bdb_dd_sh = (gf_sbgj*(1+gf_sbdsb_gzkzxs) - sf_sbmf*(1+sf_sbdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_mf_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄魔法伤害
-    bdyx_dd_sh = (gf_sbgj*(1+gf_sb_gjkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_mf_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
+    bdyx_dd_sh = (gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxmf*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_mf_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
     bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 
 #定义英雄打兵单段伤害 yxdb_dd_sh
@@ -240,40 +311,44 @@ else:
 
 if yxsh_lx == "物理":
 #计算英雄打兵物理伤害
-    yxdb_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_sbfy*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_wl_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
+    yxdb_dd_sh = (gf_yxgj*(1+gf_yxdsb_gzkzxs) - sf_sbfy*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_wl_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
     yxdb_ddbj_sh = yxdb_dd_sh * (1.3+gf_yx_bs-sf_sb_jbs)
 #计算英雄打英雄物理伤害
-    yxdyx_dd_sh = (gf_yxgj*(1+gf_yx_gzkzxs) - sf_yxfy*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_wl_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
+    yxdyx_dd_sh = (gf_yxgj*(1+gf_yxdyx_gzkzxs) - sf_yxfy*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_wl_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
     yxdyx_ddbj_sh = yxdyx_dd_sh * (1.3+gf_yx_bs-sf_yx_jbs)
 else:
 #计算英雄打兵魔法伤害
-    yxdb_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_sbmf*(1+sf_sb_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_mf_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
+    yxdb_dd_sh = (gf_yxzl*(1+gf_yxdsb_gzkzxs) - sf_sbmf*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs-sf_sb_mf_tyjs) * (1+gf_yx_jnzs-sf_sb_jnjs) * (1+gf_yx_yczs-sf_sb_ycjs) * (1+gf_yx_qtzs-sf_sb_qtjs) * 0.5
     yxdb_ddbj_sh = yxdb_dd_sh * (1.3+gf_yx_bs-sf_sb_jbs)
 #计算英雄打英雄魔法伤害
-    yxdyx_dd_sh = (gf_yxzl*(1+gf_yx_gzkzxs) - sf_yxmf*(1+sf_yx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_mf_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
+    yxdyx_dd_sh = (gf_yxzl*(1+gf_yxdyx_gzkzxs) - sf_yxmf*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)) * gf_yxjnbl * (1+gf_yx_tyzs- sf_yx_mf_tyjs) * (1+gf_yx_jnzs-sf_yx_jnjs) * (1+gf_yx_yczs-sf_yx_ycjs) * (1+gf_yx_qtzs-sf_yx_qtjs) * 0.5
     yxdyx_ddbj_sh = yxdyx_dd_sh * (1.3+gf_yx_bs-sf_yx_jbs)
 
 column4, column5, column6 = st.columns([1,0.1,1])
 
 with column4:
-    st.markdown(f"##### 兵打兵单段伤害为 <strong><span style='color:blue;font-size:25px;'>{bdb_dd_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 兵打兵暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{bdb_ddbj_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 英雄打兵单段伤害为 <strong><span style='color:blue;font-size:25px;'>{yxdb_dd_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 英雄打兵暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{yxdb_ddbj_sh}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 兵打兵单段伤害为 <strong><span style='color:blue;font-size:25px;'>{round(bdb_dd_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 兵打兵暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{round(bdb_ddbj_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 英雄打兵单段伤害为 <strong><span style='color:blue;font-size:25px;'>{round(yxdb_dd_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 英雄打兵暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{round(yxdb_ddbj_sh, 2)}</span></strong>", unsafe_allow_html=True)
 
 with column6:
-    st.markdown(f"##### 兵打英雄单段伤害为 <strong><span style='color:green;font-size:25px;'>{bdyx_dd_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 兵打英雄暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{bdyx_ddbj_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 英雄打英雄单段伤害为 <strong><span style='color:green;font-size:25px;'>{yxdyx_dd_sh}</span></strong>", unsafe_allow_html=True)
-    st.markdown(f"##### 英雄打英雄暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{yxdyx_ddbj_sh}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 兵打英雄单段伤害为 <strong><span style='color:green;font-size:25px;'>{round(bdyx_dd_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 兵打英雄暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{round(bdyx_ddbj_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 英雄打英雄单段伤害为 <strong><span style='color:green;font-size:25px;'>{round(yxdyx_dd_sh, 2)}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"##### 英雄打英雄暴击单段伤害为 <strong><span style='color:orange;font-size:25px;'>{round(yxdyx_ddbj_sh, 2)}</span></strong>", unsafe_allow_html=True)
 
 #分割线
 st.divider()
+
+column66, column67, column68 = st.columns([1,0.1,1])
 #判断是否暴击
-bdb_sfbj = st.checkbox("兵打兵 是否暴击")
-bdyx_sfbj = st.checkbox("兵打英雄 是否暴击")
-yxdb_sfbj = st.checkbox("英雄打兵 是否暴击")
-yxdyx_sfbj = st.checkbox("英雄打英雄 是否暴击")
+with column66:
+    bdb_sfbj = st.checkbox("兵打兵 是否暴击")
+    bdyx_sfbj = st.checkbox("兵打英雄 是否暴击")
+with column68:
+    yxdb_sfbj = st.checkbox("英雄打兵 是否暴击")
+    yxdyx_sfbj = st.checkbox("英雄打英雄 是否暴击")
 
 if bdb_sfbj:
     sj_bdb_sh = round(bdb_ddbj_sh)
@@ -319,8 +394,15 @@ else:
 #分割线
 st.divider()
 
-# 守方士兵的最大血量输入
-defender_soldier_max_hp_per_unit = st.number_input("每只守方士兵的最大血量", min_value=1, value=1)
+# 定义每只守方士兵的最大血量
+defender_soldier_max_hp_per_unit = st.text_input("每只守方士兵的最大血量", "1")
+defender_soldier_max_hp_per_unit = mb_shuru(defender_soldier_max_hp_per_unit)
+# 守方每只守方士兵的最大血量
+if defender_soldier_max_hp_per_unit <= 1:
+    efender_soldier_max_hp_per_unit = 1
+else:
+    defender_soldier_max_hp_per_unit = round(defender_soldier_max_hp_per_unit)
+st.write(f"每只兵: {defender_soldier_max_hp_per_unit}")
 
 # 守方士兵是否满血选择
 defender_full_health = st.checkbox("守方士兵是否满血",value=True)
@@ -331,33 +413,25 @@ if defender_full_health:
     st.write(f"守方士兵当前总血量: {defender_soldier_hp}（满血）")
 else:
     defender_soldier_hp = st.text_input("守方士兵当前总血量", "0") # 不满血时用户可以输入总血量
-    if defender_soldier_hp == "":
-        defender_soldier_hp = 0
-    else:
-        # 计算守方英雄当前血量
-        nums = re.findall(r"\d+", defender_soldier_hp)
-        nums = [int(num) for num in nums]
-        defender_soldier_hp = eval(defender_soldier_hp)
-    # 守方英雄当前血量最小为1
+    defender_soldier_hp = mb_shuru(defender_soldier_hp)
+    # 守方士兵当前血量最小为0
     if defender_soldier_hp <= 0:
         defender_soldier_hp = 0
+    else:
+        defender_soldier_hp = round(defender_soldier_hp)
     defender_soldier_count = math.ceil(defender_soldier_hp / defender_soldier_max_hp_per_unit)  # 计算守方士兵数量
 
 #分割线
 st.divider()
 
 #定义守方英雄当前血量
-defender_hero_hp = st.text_input("守方英雄当前血量","1")
-if defender_hero_hp == "":
-    defender_hero_hp= 0
-else:
-#计算守方英雄当前血量
-    nums = re.findall(r"\d+", defender_hero_hp )
-    nums = [int(num) for num in nums]
-    defender_hero_hp = eval(defender_hero_hp)
-#守方英雄当前血量最小为1
-if defender_hero_hp <=1:
+defender_hero_hp = st.text_input("守方英雄当前血量", "1")
+defender_hero_hp = mb_shuru(defender_hero_hp)
+# 守方英雄当前血量最小为1
+if defender_hero_hp <= 1:
     defender_hero_hp = 1
+else:
+    defender_hero_hp = round(defender_hero_hp)
 
 #分割线
 st.divider()
@@ -380,6 +454,11 @@ st.divider()
 
 # 士兵出手的最大段数（按攻方士兵数量和每只士兵的2段攻击计算）
 attacker_soldier_max_segments = attacker_soldier_count * 2
+
+sb_dsdspd = st.checkbox("士兵是否有段数丢失（有就勾选）")
+if sb_dsdspd:
+    attacker_soldier_dsds = st.number_input("士兵丢失段数", min_value=0, max_value=attacker_soldier_max_segments,value=0)
+    attacker_soldier_max_segments = attacker_soldier_max_segments - attacker_soldier_dsds
 
 # 用户选择士兵优先出手的段数
 st.write(f"士兵出手的段数最大参考值: {attacker_soldier_max_segments}")
