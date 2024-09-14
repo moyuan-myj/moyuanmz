@@ -6,22 +6,35 @@ import re
 #定义面板输入函数
 def mb_shuru(shuxing):
     if shuxing == "":
-        shuxing = 0
+        return 0
     else:
-        nums = re.findall(r"\d+", shuxing)
-        nums = [int(num) for num in nums]
-        shuxing = eval(shuxing)
+        # 验证输入只包含合法的字符（数字、运算符、小数点、括号等）
+        if re.match(r'^[\d\+\-\*/\.\(\)\s]+$', shuxing):
+            try:
+                # 安全执行输入的数学表达式
+                shuxing = eval(shuxing)
+            except:
+                # 如果输入的表达式有误，返回0
+                shuxing = 0
+        else:
+            # 如果包含非法字符，返回0
+            shuxing = 0
     return shuxing
 
 #定义百分比输入函数
 def bfb_shuru(baifenbi):
     if baifenbi == "":
-        baifenbi = 0
+        return 0
     else:
-        # 计算某属性
-        nums = re.findall(r"\d+", baifenbi)
-        nums = [int(num) for num in nums]
-        baifenbi = eval(baifenbi)*0.01
+        # 验证输入只包含合法的字符
+        if re.match(r'^[\d\+\-\*/\.\(\)\s]+$', baifenbi):
+            try:
+                # 计算百分比并返回
+                baifenbi = eval(baifenbi) * 0.01
+            except:
+                baifenbi = 0
+        else:
+            baifenbi = 0
     return baifenbi
 
 #标题
