@@ -488,12 +488,54 @@ hero_segments = gf_yx_gjds
 defender_soldier_remaining_hp = defender_soldier_hp
 defender_hero_remaining_hp = defender_hero_hp
 
-# 处理士兵优先出手段数，逐个计算守方士兵承伤
-soldier_to_soldier_segments_used = 0
-for i in range(defender_soldier_count):
-    current_soldier_hp = min(defender_soldier_max_hp_per_unit, defender_soldier_remaining_hp)
+# ------------------------------
+# 阶段1：士兵优先出手打士兵
+# ------------------------------
 
-    # 计算当前士兵能承受的段数
+# 计算残血士兵的血量（如果有残血士兵）
+def calculate_defender_soldier_status(defender_soldier_remaining_hp, defender_soldier_max_hp_per_unit):
+    remaining_hp_after_full_soldiers = defender_soldier_remaining_hp % defender_soldier_max_hp_per_unit
+    if remaining_hp_after_full_soldiers > 0:
+        last_soldier_hp = remaining_hp_after_full_soldiers
+        defender_soldier_count = math.floor(defender_soldier_remaining_hp / defender_soldier_max_hp_per_unit) + 1
+    else:
+        last_soldier_hp = defender_soldier_max_hp_per_unit
+        defender_soldier_count = defender_soldier_remaining_hp // defender_soldier_max_hp_per_unit
+    return last_soldier_hp, defender_soldier_count
+
+# 计算当前守方士兵状态
+last_soldier_hp, defender_soldier_count = calculate_defender_soldier_status(defender_soldier_remaining_hp, defender_soldier_max_hp_per_unit)
+
+# 分割线
+st.divider()
+
+# 输出残血士兵信息（用于调试）
+st.write(f"士兵承伤阶段1 - 兵打兵 - 残血士兵血量: {last_soldier_hp}")
+
+# 处理士兵优先出手段数
+soldier_to_soldier_segments_used = 0
+
+# 处理残血士兵（如果存在）
+if last_soldier_hp > 0 and defender_soldier_remaining_hp > 0:
+    segments_needed_to_kill_last_soldier = math.ceil(last_soldier_hp / soldier_to_soldier_damage)
+    if soldier_to_soldier_priority_segments >= segments_needed_to_kill_last_soldier:
+        # 杀死残血士兵
+        soldier_to_soldier_priority_segments -= segments_needed_to_kill_last_soldier
+        defender_soldier_remaining_hp -= last_soldier_hp
+        soldier_to_soldier_segments_used += segments_needed_to_kill_last_soldier
+        last_soldier_hp = 0  # 残血士兵已被杀死
+    else:
+        # 残血士兵未被打死
+        defender_soldier_remaining_hp -= soldier_to_soldier_priority_segments * soldier_to_soldier_damage
+        last_soldier_hp -= soldier_to_soldier_priority_segments * soldier_to_soldier_damage
+        soldier_to_soldier_segments_used += soldier_to_soldier_priority_segments
+        soldier_to_soldier_priority_segments = 0
+
+# 处理满血士兵的承伤
+for _ in range(defender_soldier_count - 1):  # 忽略已处理的残血士兵
+    if soldier_to_soldier_priority_segments == 0 or defender_soldier_remaining_hp <= 0:
+        break
+    current_soldier_hp = defender_soldier_max_hp_per_unit
     segments_needed_to_kill_soldier = math.ceil(current_soldier_hp / soldier_to_soldier_damage)
 
     if soldier_to_soldier_priority_segments >= segments_needed_to_kill_soldier:
@@ -506,61 +548,124 @@ for i in range(defender_soldier_count):
         defender_soldier_remaining_hp -= soldier_to_soldier_priority_segments * soldier_to_soldier_damage
         soldier_to_soldier_segments_used += soldier_to_soldier_priority_segments
         soldier_to_soldier_priority_segments = 0
-        break  # 没有剩余段数，跳出循环
+        break
 
 # 若士兵段数还有剩余且守方士兵已被打光，则剩余段数打英雄
 soldier_to_hero_segments = soldier_to_soldier_priority_segments
 
-# 英雄出手段数，逐个计算剩余守方士兵承伤
-hero_to_soldier_segments_used = 0
-for i in range(defender_soldier_count):
-    if defender_soldier_remaining_hp <= 0:
-        break
+# ------------------------------
+# 阶段2：英雄出手打士兵
+# ------------------------------
 
-    current_soldier_hp = min(defender_soldier_max_hp_per_unit, defender_soldier_remaining_hp)
+# 重新计算守方士兵状态
+last_soldier_hp, defender_soldier_count = calculate_defender_soldier_status(defender_soldier_remaining_hp, defender_soldier_max_hp_per_unit)
+
+# 输出残血士兵信息（用于调试）
+st.write(f"士兵承伤阶段2 - 英雄打兵 - 残血士兵血量: {last_soldier_hp}")
+
+hero_to_soldier_segments_used = 0
+
+# 处理残血士兵
+if last_soldier_hp > 0 and defender_soldier_remaining_hp > 0:
+    segments_needed_to_kill_last_soldier = math.ceil(last_soldier_hp / hero_to_soldier_damage)
+    if hero_segments >= segments_needed_to_kill_last_soldier:
+        # 杀死残血士兵
+        hero_segments -= segments_needed_to_kill_last_soldier
+        defender_soldier_remaining_hp -= last_soldier_hp
+        hero_to_soldier_segments_used += segments_needed_to_kill_last_soldier
+        last_soldier_hp = 0
+    else:
+        # 残血士兵未被打死
+        defender_soldier_remaining_hp -= hero_segments * hero_to_soldier_damage
+        last_soldier_hp -= hero_segments * hero_to_soldier_damage
+        hero_to_soldier_segments_used += hero_segments
+        hero_segments = 0
+
+# 处理满血士兵
+for _ in range(defender_soldier_count - 1):
+    if hero_segments == 0 or defender_soldier_remaining_hp <= 0:
+        break
+    current_soldier_hp = defender_soldier_max_hp_per_unit
     segments_needed_to_kill_soldier = math.ceil(current_soldier_hp / hero_to_soldier_damage)
 
     if hero_segments >= segments_needed_to_kill_soldier:
-        # 杀死当前士兵
         hero_segments -= segments_needed_to_kill_soldier
         defender_soldier_remaining_hp -= current_soldier_hp
         hero_to_soldier_segments_used += segments_needed_to_kill_soldier
     else:
-        # 当前士兵未被打死
         defender_soldier_remaining_hp -= hero_segments * hero_to_soldier_damage
         hero_to_soldier_segments_used += hero_segments
         hero_segments = 0
-        break  # 没有剩余段数，跳出循环
+        break
 
 # 若英雄出手段数还有剩余且守方士兵已被打光，则剩余段数打英雄
 hero_to_hero_segments = hero_segments
 
-# 处理剩余士兵段数，逐个计算剩余守方士兵承伤
-remaining_soldier_to_soldier_segments_used = 0
-for i in range(defender_soldier_count):
-    if defender_soldier_remaining_hp <= 0:
-        break
+# ------------------------------
+# 阶段3：剩余士兵出手打士兵
+# ------------------------------
 
-    current_soldier_hp = min(defender_soldier_max_hp_per_unit, defender_soldier_remaining_hp)
+# 重新计算守方士兵状态
+last_soldier_hp, defender_soldier_count = calculate_defender_soldier_status(defender_soldier_remaining_hp, defender_soldier_max_hp_per_unit)
+
+# 输出残血士兵信息（用于调试）
+st.write(f"士兵承伤阶段3 - 第二次兵打兵 残血士兵血量: {last_soldier_hp}")
+
+remaining_soldier_to_soldier_segments_used = 0
+
+# 处理残血士兵
+if last_soldier_hp > 0 and defender_soldier_remaining_hp > 0:
+    segments_needed_to_kill_last_soldier = math.ceil(last_soldier_hp / soldier_to_soldier_damage)
+    if remaining_soldier_segments >= segments_needed_to_kill_last_soldier:
+        # 杀死残血士兵
+        remaining_soldier_segments -= segments_needed_to_kill_last_soldier
+        defender_soldier_remaining_hp -= last_soldier_hp
+        remaining_soldier_to_soldier_segments_used += segments_needed_to_kill_last_soldier
+        last_soldier_hp = 0
+    else:
+        # 残血士兵未被打死
+        defender_soldier_remaining_hp -= remaining_soldier_segments * soldier_to_soldier_damage
+        last_soldier_hp -= remaining_soldier_segments * soldier_to_soldier_damage
+        remaining_soldier_to_soldier_segments_used += remaining_soldier_segments
+        remaining_soldier_segments = 0
+
+# 处理满血士兵
+for _ in range(defender_soldier_count - 1):
+    if remaining_soldier_segments == 0 or defender_soldier_remaining_hp <= 0:
+        break
+    current_soldier_hp = defender_soldier_max_hp_per_unit
     segments_needed_to_kill_soldier = math.ceil(current_soldier_hp / soldier_to_soldier_damage)
 
     if remaining_soldier_segments >= segments_needed_to_kill_soldier:
-        # 杀死当前士兵
         remaining_soldier_segments -= segments_needed_to_kill_soldier
         defender_soldier_remaining_hp -= current_soldier_hp
         remaining_soldier_to_soldier_segments_used += segments_needed_to_kill_soldier
     else:
-        # 当前士兵未被打死
         defender_soldier_remaining_hp -= remaining_soldier_segments * soldier_to_soldier_damage
         remaining_soldier_to_soldier_segments_used += remaining_soldier_segments
         remaining_soldier_segments = 0
-        break  # 没有剩余段数，跳出循环
+        break
 
-# 若士兵后续段数还有剩余且守方士兵已被打光，则剩余段数打英雄
+# 若剩余士兵段数还有剩余且守方士兵已被打光，则剩余段数打英雄
 remaining_soldier_to_hero_segments = remaining_soldier_segments
 
+# ------------------------------
 # 计算守方英雄的剩余血量
-defender_hero_remaining_hp = max(0, defender_hero_remaining_hp - soldier_to_hero_segments * soldier_to_hero_damage - hero_to_hero_segments * hero_to_hero_damage - remaining_soldier_to_hero_segments * soldier_to_hero_damage)
+# ------------------------------
+
+defender_hero_remaining_hp = max(
+    0,
+    defender_hero_remaining_hp
+    - (soldier_to_hero_segments + remaining_soldier_to_hero_segments) * soldier_to_hero_damage
+    - hero_to_hero_segments * hero_to_hero_damage
+)
+
+# 分割线
+st.divider()
+
+# ------------------------------
+# 输出结果
+# ------------------------------
 
 # 输出战斗段数信息
 # 士兵优先出手打士兵的实际段数: soldier_to_soldier_segments_used
@@ -612,3 +717,12 @@ st.markdown(f"###### 其中：对英雄造成伤害 <strong><span style='color:g
 st.divider()
 
 st.write("目前计算器仍在测试中，梦战计算器使用交流群 928411216")
+
+# 初始化剩余士兵段数、英雄出手段数
+remaining_soldier_segments = attacker_soldier_max_segments - soldier_to_soldier_priority_segments
+hero_segments = gf_yx_gjds
+
+# 初始化守方士兵和英雄的剩余血量
+defender_soldier_remaining_hp = defender_soldier_hp
+defender_hero_remaining_hp = defender_hero_hp
+
