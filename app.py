@@ -1,125 +1,96 @@
+import math
 import streamlit as st
 import re
 
 #标题
 st.title('梦幻模拟战简易计算器')
 
+#定义面板输入函数
+def mb_shuru(shuxing):
+    if shuxing == "":
+        return 0
+    else:
+        # 验证输入只包含合法的字符（数字、运算符、小数点、括号等）
+        if re.match(r'^[\d\+\-\*/\.\(\)\s]+$', shuxing):
+            try:
+                # 安全执行输入的数学表达式
+                shuxing = eval(shuxing)
+            except:
+                # 如果输入的表达式有误，返回0
+                st.warning("输入的表达式有误，请检查后重新输入。否则此值不生效")
+                shuxing = 0
+        else:
+            # 如果包含非法字符，返回0
+            st.warning("输入包含非法字符，请检查是否是英文的括号和乘除法*/，然后重新输入。否则此值不生效")
+            shuxing = 0
+    return shuxing
+
+#定义百分比输入函数
+def bfb_shuru(baifenbi):
+    if baifenbi == "":
+        return 0
+    else:
+        # 验证输入只包含合法的字符
+        if re.match(r'^[\d\+\-\*/\.\(\)\s]+$', baifenbi):
+            try:
+                # 计算百分比并返回
+                baifenbi = eval(baifenbi) * 0.01
+            except:
+                baifenbi = 0
+                st.warning("输入的表达式有误，请检查后重新输入。否则此值不生效")
+        else:
+            baifenbi = 0
+            st.warning("输入包含非法字符，请检查是否是英文的括号和乘除法*/，然后重新输入。否则此值不生效")
+    return baifenbi
+
+
 #定义攻方攻击
 gf_gj = st.text_input("攻方攻击","0")
-if gf_gj == "":
-    gf_gj= 0
-else:
-#计算攻方攻击
-    nums = re.findall(r"\d+", gf_gj )
-    nums = [int(num) for num in nums]
-    gf_gj = eval(gf_gj)
+gf_gj = mb_shuru(gf_gj)
 
 #定义攻方智力
 gf_zl = st.text_input("攻方智力","0")
-if gf_zl == "":
-    gf_zl= 0
-else:
-#计算攻方智力
-    nums = re.findall(r"\d+", gf_zl )
-    nums = [int(num) for num in nums]
-    gf_zl = eval(gf_zl)
+gf_zl = mb_shuru(gf_zl)
 
 #定义守方防御
 sf_fy = st.text_input("守方防御","0")
-if sf_fy == "":
-    sf_fy= 0
-else:
-#计算守方防御
-    nums = re.findall(r"\d+", sf_fy )
-    nums = [int(num) for num in nums]
-    sf_fy = eval(sf_fy)
+sf_fy = mb_shuru(sf_fy)
 
 #定义守方魔防
 sf_mf = st.text_input("守方魔防","0")
-if sf_mf == "":
-    sf_mf= 0
-else:
-#计算守方魔防
-    nums = re.findall(r"\d+", sf_mf )
-    nums = [int(num) for num in nums]
-    sf_mf = eval(sf_mf)
+sf_mf = mb_shuru(sf_mf)
 
 #定义攻方技能倍率
 gf_jnbl = st.text_input("攻方技能倍率","0")
-if gf_jnbl == "":
-    gf_jnbl= "0"
-else:
-    gf_jnbl = float(gf_jnbl)
+gf_jnbl = mb_shuru(gf_jnbl)
 
 #定义通用增减伤
 ty_zjs = st.text_input("通用增减伤%","0")
-if ty_zjs == "":
-    ty_zjs= 0
-else:
-#计算通用增减伤
-    nums = re.findall(r"\d+", ty_zjs )
-    nums = [int(num) for num in nums]
-    ty_zjs = eval(ty_zjs)*0.01
+ty_zjs = bfb_shuru(ty_zjs)
 
 #定义技能增减伤
 jn_zjs = st.text_input("技能增减伤%","0")
-if jn_zjs == "":
-    jn_zjs= 0
-else:
-#计算技能增减伤
-    nums = re.findall(r"\d+", jn_zjs )
-    nums = [int(num) for num in nums]
-    jn_zjs = eval(jn_zjs)*0.01
+jn_zjs = bfb_shuru(jn_zjs)
 
 #定义远程增减伤
 yc_zjs = st.text_input("远程增减伤%","0")
-if yc_zjs == "":
-    yc_zjs= 0
-else:
-#计算远程增减伤
-    nums = re.findall(r"\d+", yc_zjs )
-    nums = [int(num) for num in nums]
-    yc_zjs = eval(yc_zjs)*0.01
+yc_zjs = bfb_shuru(yc_zjs)
 
 #定义其他增减伤
 qt_zjs = st.text_input("其他增减伤%","0")
-if qt_zjs == "":
-    qt_zjs= 0
-else:
-#计算其他增减伤
-    nums = re.findall(r"\d+", qt_zjs )
-    nums = [int(num) for num in nums]
-    qt_zjs = eval(qt_zjs)*0.01
+qt_zjs = bfb_shuru(qt_zjs)
 
 #定义攻方攻智克制系数
 gf_gzkzxs = st.text_input("攻方攻智克制系数%","0")
-if gf_gzkzxs == "":
-    gf_gzkzxs= 0
-else:
-#计算攻方攻智克制系数
-    nums = re.findall(r"\d+", gf_gzkzxs )
-    nums = [int(num) for num in nums]
-    gf_gzkzxs = eval(gf_gzkzxs)*0.01
+gf_gzkzxs = bfb_shuru(gf_gzkzxs)
 
 #定义攻方无视防御系数
 gf_wsfyxs = st.text_input("攻方无视防御系数%","0")
-if gf_wsfyxs == "":
-    gf_wsfyxs= 0
-else:
-#计算攻方无视防御系数
-    nums = re.findall(r"\d+", gf_wsfyxs )
-    nums = [int(num) for num in nums]
-    gf_wsfyxs = eval(gf_wsfyxs)*0.01
+gf_wsfyxs = bfb_shuru(gf_wsfyxs)
 
 #定义守方双防克制系数
 sf_sfkzxs = st.text_input("守方双防克制系数%","0")
-if sf_sfkzxs == "":
-    sf_sfkzxs= 0
-else:
-#计算守方双防克制系数
-    nums = re.findall(r"\d+", sf_sfkzxs )
-    nums = [int(num) for num in nums]
-    sf_sfkzxs = eval(sf_sfkzxs)*0.01
+sf_sfkzxs = bfb_shuru(sf_sfkzxs)
 
 #定义守方地形
 sf_dx = st.selectbox("守方地形",("无地形","树林","城墙","山地","基岩","货物","沙丘","礁石","石柱"))
@@ -145,7 +116,7 @@ elif sf_dx == "礁石":
 else:
     sf_dxxz = 0.05
 #输出地形修正
-st.write("###### 守方地形修正为", sf_dxxz)
+st.write(f"守方地形修正为: <font color=red>{sf_dxxz*100}%</font>",unsafe_allow_html=True)
 
 #攻击系数
 gf_gjxs = st.radio("攻击系数（单点为0.5，AOE为10，水狗1.5）",(0.5,10,1.5))
@@ -158,23 +129,11 @@ sh_lx = st.radio("选择伤害类型",("物理伤害","魔法伤害"))
 
 #定义攻方暴伤加成
 gf_bs = st.text_input("攻方暴伤加成%","0")
-if gf_bs == "":
-    gf_bs= 0
-else:
-#计算攻方暴伤加成
-    nums = re.findall(r"\d+", gf_bs)
-    nums = [int(num) for num in nums]
-    gf_bs = eval(gf_bs)*0.01
+gf_bs = bfb_shuru(gf_bs)
 
 #定义守方减暴伤
 sf_jbs = st.text_input("守方减暴伤%","0")
-if sf_jbs == "":
-    sf_jbs= 0
-else:
-#计算守方减暴伤
-    nums = re.findall(r"\d+", sf_jbs)
-    nums = [int(num) for num in nums]
-    sf_jbs = eval(sf_jbs)*0.01
+sf_jbs = bfb_shuru(sf_jbs)
 
 #定义单段伤害 sh_dd
 #定义总伤害 sh_zs
