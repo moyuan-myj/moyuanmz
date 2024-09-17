@@ -510,6 +510,25 @@ with st.expander("（点击打开查看）战斗攻防差与增减伤关系（�
 #分割线
 st.divider()
 
+st.markdown(f"<strong><span style='color:red;font-size:25px;'>以下即将进行段数分配战斗模拟</span></strong>", unsafe_allow_html=True)
+
+sdsr_pd = st.checkbox("关联读取以上单段伤害计算结果 (想手动输入单段伤害 就取消勾选)", value=True)
+
+if sdsr_pd:
+    soldier_to_soldier_damage = sj_bdb_sh
+    soldier_to_hero_damage = sj_bdyx_sh
+    hero_to_soldier_damage = sj_yxdb_sh
+    hero_to_hero_damage = sj_yxdyx_sh
+else:
+    soldier_to_soldier_damage = round(st.number_input("士兵打士兵的单段伤害", min_value=1,value=1))
+    soldier_to_hero_damage = round(st.number_input("士兵打英雄的单段伤害", min_value=1,value=1))
+    hero_to_soldier_damage = round(st.number_input("英雄打士兵的单段伤害", min_value=1,value=1))
+    hero_to_hero_damage = round(st.number_input("英雄打英雄的单段伤害", min_value=1,value=1))
+
+
+#分割线
+st.divider()
+
 # 攻方士兵是否满血选择
 attacker_full_health = st.checkbox("攻方士兵是否满血",value=True)
 
@@ -576,26 +595,10 @@ else:
 #分割线
 st.divider()
 
-sdsr_pd = st.checkbox("读取以上单段伤害计算结果，不手动输入单段伤害", value=True)
-
-if sdsr_pd:
-    soldier_to_soldier_damage = sj_bdb_sh
-    soldier_to_hero_damage = sj_bdyx_sh
-    hero_to_soldier_damage = sj_yxdb_sh
-    hero_to_hero_damage = sj_yxdyx_sh
-else:
-    soldier_to_soldier_damage = st.number_input("士兵打士兵的单段伤害", min_value=1,value=1)
-    soldier_to_hero_damage = st.number_input("士兵打英雄的单段伤害", min_value=1,value=1)
-    hero_to_soldier_damage = st.number_input("英雄打士兵的单段伤害", min_value=1,value=1)
-    hero_to_hero_damage = st.number_input("英雄打英雄的单段伤害", min_value=1,value=1)
-
-#分割线
-st.divider()
-
 # 士兵出手的最大段数（按攻方士兵数量和每只士兵的2段攻击计算）
 attacker_soldier_max_segments = attacker_soldier_count * 2
 
-sb_dsdspd = st.checkbox("士兵是否有段数丢失（有就勾选）")
+sb_dsdspd = st.checkbox("士兵是否有真正的段数丢失（有就勾选）")
 if sb_dsdspd:
     attacker_soldier_dsds = st.number_input("士兵丢失段数", min_value=0, max_value=attacker_soldier_max_segments,value=0)
     attacker_soldier_max_segments = attacker_soldier_max_segments - attacker_soldier_dsds
@@ -936,18 +939,45 @@ st.divider()
 # 输出结果
 # ------------------------------
 
+# 将2个阶段的士兵打士兵段数合计起来
+soldier_to_soldier_segments_used_hj = soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used
+
+# 定义动画丢失段数
+bdb_dhds = 0
+bdyx_dhds = 0
+yxdb_dhds = 0
+yxdyx_dhds = 0
+dhds_pd = st.checkbox("默认无动画影响的段数丢失，如有请勾选填写动画丢失段数")
+# 定义动画丢失段数
+if dhds_pd:
+    bdb_dhds = round(st.number_input("士兵打士兵的动画丢失段数", min_value=0, value=0))
+    bdyx_dhds = round(st.number_input("士兵打英雄的动画丢失段数", min_value=0, value=0))
+    yxdb_dhds = round(st.number_input("英雄打士兵的动画丢失段数", min_value=0, value=0))
+    yxdyx_dhds = round(st.number_input("英雄打英雄的动画丢失段数", min_value=0, value=0))
+
+# 根据动画丢失段数影响修正段数
+soldier_to_soldier_segments_used_hj -= bdb_dhds
+soldier_to_hero_segments_used -= bdyx_dhds
+hero_to_soldier_segments_used -= yxdb_dhds
+hero_to_hero_segments -= yxdyx_dhds
+
 # 输出战斗段数信息
 column91, column92, column93 = st.columns([1,0.1,1])
 with column91:
-    st.write(f"士兵打士兵的段数: {soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used} ")
+    st.write(f"士兵打士兵的段数: {soldier_to_soldier_segments_used_hj} ")
     st.write(f"士兵打英雄的段数: {soldier_to_hero_segments_used} ")
     st.write(f"英雄打士兵的段数: {hero_to_soldier_segments_used} ")
     st.write(f"英雄打英雄的段数: {hero_to_hero_segments} ")
 with column93:
-    st.write(f"士兵打士兵伤害: {(soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used) * soldier_to_soldier_damage}")
+    st.write(f"士兵打士兵伤害: {soldier_to_soldier_segments_used_hj * soldier_to_soldier_damage}")
     st.write(f"士兵打英雄伤害: {soldier_to_hero_segments_used * soldier_to_hero_damage}")
     st.write(f"英雄打士兵伤害:{hero_to_soldier_segments_used * hero_to_soldier_damage}")
     st.write(f"英雄打英雄伤害: {hero_to_hero_segments * hero_to_hero_damage}")
+
+# 定义本次单点总伤害
+dd_zsh = (soldier_to_soldier_segments_used_hj* soldier_to_soldier_damage + soldier_to_hero_segments_used * soldier_to_hero_damage + hero_to_soldier_segments_used * hero_to_soldier_damage + hero_to_hero_segments * hero_to_hero_damage)
+dd_dsb_sh = soldier_to_soldier_segments_used_hj * soldier_to_soldier_damage + hero_to_soldier_segments_used * hero_to_soldier_damage
+dd_dyx_sh = soldier_to_hero_segments_used * soldier_to_hero_damage + hero_to_hero_segments * hero_to_hero_damage
 
 # 分割线
 st.divider()
@@ -967,12 +997,6 @@ st.markdown(f"##### 守方英雄剩余血量 <strong><span style='color:green;fo
 # 分割线
 st.divider()
 
-# 定义本次单点总伤害
-dd_zsh = ((soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used) * soldier_to_soldier_damage + soldier_to_hero_segments_used * soldier_to_hero_damage + hero_to_soldier_segments_used * hero_to_soldier_damage + hero_to_hero_segments * hero_to_hero_damage)
-
-dd_dsb_sh = (soldier_to_soldier_segments_used + remaining_soldier_to_soldier_segments_used) * soldier_to_soldier_damage + hero_to_soldier_segments_used * hero_to_soldier_damage
-dd_dyx_sh = soldier_to_hero_segments_used * soldier_to_hero_damage + hero_to_hero_segments * hero_to_hero_damage
-
 st.markdown(f"##### 本次单点总伤害 <strong><span style='color:blue;font-size:25px;'>{dd_zsh}</span></strong>", unsafe_allow_html=True)
 
 st.markdown(f"###### 其中：对士兵造成伤害 <strong><span style='color:gray;font-size:20px;'>{dd_dsb_sh}</span></strong>", unsafe_allow_html=True)
@@ -981,4 +1005,4 @@ st.markdown(f"###### 其中：对英雄造成伤害 <strong><span style='color:g
 # 分割线
 st.divider()
 
-st.write("目前计算器仍在测试中，梦战计算器使用交流群 928411216")
+st.write("目前计算器仍在测试中，aoe计算器开发中，梦战计算器使用交流群 928411216")
