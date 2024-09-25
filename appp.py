@@ -333,6 +333,20 @@ with st.expander("（点击打开查看）士兵科技参考"):
                           "常驻双防+20%，但与魔物或僧侣交战时，双防克制修正-16%"]})
     st.dataframe(chakan_sbkj)
 
+with st.expander("（点击打开查看）职业克制系数参考"):
+    chakan_kzxs = pd.DataFrame(
+        {"进攻\防守": ["枪兵", "步兵", "骑兵", "飞兵", "水兵", "弓兵", "法师", "僧侣", "魔物"],
+         "枪兵": ["", "+40%", "-30%", "", "", "", "","", ""],
+         "步兵": ["-20%", "", "+20%", "", "", "", "", "", ""],
+         "骑兵": ["+30%", "-30%", "", "", "", "", "", "", ""],
+         "飞兵": ["", "", "", "", "", "+30%", "", "", ""],
+         "水兵": ["", "", "", "", "", "", "", "", ""],
+         "弓兵": ["", "", "", "", "", "", "", "", ""],
+         "法师": ["", "", "", "", "", "", "", "", ""],
+         "僧侣": ["", "", "", "", "", "", "", "", "-40%"],
+         "魔物": ["", "", "", "", "", "", "","+80%", ""]})
+    st.dataframe(chakan_kzxs)
+
 #分割线
 st.divider()
 
@@ -434,8 +448,8 @@ if sj_yxdyx_sh < 1:
 #分割线
 st.divider()
 
-#定义兵打兵 攻防差bdb_gfc 通用增减%bdb_tyzj 技能增减%bdb_jnzj 远程增减%bdb_yczj 其他增减%bdb_qtzj 技能倍率bdb_jnbl
-#定义兵打英雄 攻防差bdyx_gfc 通用增减%bdyx_tyzj 技能增减%bdyx_jnzj 远程增减%bdyx_yczj 其他增减%bdyx_qtzj 技能倍率bdyx_jnbl
+#定义兵打兵 攻防差bdb_gfc 通用增减%bdb_tyzj 技能增减%bdb_jnzj 远程增减%bdb_yczj 其他增减%bdb_qtzj 技能倍率bdb_jnbl 爆伤倍率 bdb_bsbv
+#定义兵打英雄 攻防差bdyx_gfc 通用增减%bdyx_tyzj 技能增减%bdyx_jnzj 远程增减%bdyx_yczj 其他增减%bdyx_qtzj 技能倍率bdyx_jnbl 爆伤倍率 bdyx_bsbv
 if sbsh_lx == "物理":
     bdb_gfc = gf_sbgj*(1+gf_sbdsb_gzkzxs) - sf_sbfy*(1+sf_sbdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)
     bdb_tyzj = (gf_sb_tyzs - sf_sb_wl_tyjs)*100
@@ -443,12 +457,14 @@ if sbsh_lx == "物理":
     bdb_yczj = (gf_sb_yczs - sf_sb_ycjs)*100
     bdb_qtzj = (gf_sb_qtzs - sf_sb_qtjs)*100
     bdb_jnbl = gf_sbjnbl
+    bdb_bsbv = 1.3+gf_sb_bs-sf_sb_jbs
     bdyx_gfc = gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxfy*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)
     bdyx_tyzj = (gf_sb_tyzs- sf_yx_wl_tyjs)*100
     bdyx_jnzj = (gf_sb_jnzs-sf_yx_jnjs)*100
     bdyx_yczj = (gf_sb_yczs-sf_yx_ycjs)*100
     bdyx_qtzj = (gf_sb_qtzs-sf_yx_qtjs)*100
     bdyx_jnbl = gf_sbjnbl
+    bdyx_bsbv = 1.3+gf_sb_bs-sf_yx_jbs
 else:
     bdb_gfc = gf_sbgj*(1+gf_sbdsb_gzkzxs) - sf_sbmf*(1+sf_sbdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)
     bdb_tyzj = (gf_sb_tyzs-sf_sb_mf_tyjs)*100
@@ -456,14 +472,16 @@ else:
     bdb_yczj = (gf_sb_yczs-sf_sb_ycjs)*100
     bdb_qtzj = (gf_sb_qtzs-sf_sb_qtjs)*100
     bdb_jnbl = gf_sbjnbl
+    bdb_bsbv = 1.3+gf_sb_bs-sf_sb_jbs
     bdyx_gfc = gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxmf*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)
     bdyx_tyzj = (gf_sb_tyzs- sf_yx_mf_tyjs)*100
     bdyx_jnzj = (gf_sb_jnzs-sf_yx_jnjs)*100
     bdyx_yczj = (gf_sb_yczs-sf_yx_ycjs)*100
     bdyx_qtzj = (gf_sb_qtzs-sf_yx_qtjs)*100
     bdyx_jnbl = gf_sbjnbl
-#定义英雄打兵 攻防差yxdb_gfc 通用增减%yxdb_tyzj 技能增减%yxdb_jnzj 远程增减%yxdb_yczj 其他增减%yxdb_qtzj 技能倍率yxdb_jnbl
-#定义英雄打英雄 攻防差yxdyx_gfc 通用增减%yxdyx_tyzj 技能增减%yxdyx_jnzj 远程增减%yxdyx_yczj 其他增减%yxdyx_qtzj 技能倍率yxdyx_jnbl
+    bdyx_bsbv = 1.3+gf_sb_bs-sf_yx_jbs
+#定义英雄打兵 攻防差yxdb_gfc 通用增减%yxdb_tyzj 技能增减%yxdb_jnzj 远程增减%yxdb_yczj 其他增减%yxdb_qtzj 技能倍率yxdb_jnbl 暴伤倍率yxdb_bsbv
+#定义英雄打英雄 攻防差yxdyx_gfc 通用增减%yxdyx_tyzj 技能增减%yxdyx_jnzj 远程增减%yxdyx_yczj 其他增减%yxdyx_qtzj 技能倍率yxdyx_jnbl 爆伤倍率yxdyx_bsbv
 if yxsh_lx == "物理":
     yxdb_gfc = gf_yxgj*(1+gf_yxdsb_gzkzxs) - sf_sbfy*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
     yxdb_tyzj = gf_yx_tyzs-sf_sb_wl_tyjs
@@ -471,12 +489,14 @@ if yxsh_lx == "物理":
     yxdb_yczj = gf_yx_yczs-sf_sb_ycjs
     yxdb_qtzj = gf_yx_qtzs-sf_sb_qtjs
     yxdb_jnbl = gf_yxjnbl
+    yxdb_bsbv = 1.3+gf_yx_bs-sf_sb_jbs
     yxdyx_gfc = gf_yxgj*(1+gf_yxdyx_gzkzxs) - sf_yxfy*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
     yxdyx_tyzj = gf_yx_tyzs- sf_yx_wl_tyjs
     yxdyx_jnzj = gf_yx_jnzs-sf_yx_jnjs
     yxdyx_yczj = gf_yx_yczs-sf_yx_ycjs
     yxdyx_qtzj = gf_yx_qtzs-sf_yx_qtjs
     yxdyx_jnbl = gf_yxjnbl
+    yxdyx_bsbv = 1.3+gf_yx_bs-sf_yx_jbs
 else:
     yxdb_gfc = gf_yxzl*(1+gf_yxdsb_gzkzxs) - sf_sbmf*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
     yxdb_tyzj = gf_yx_tyzs-sf_sb_mf_tyjs
@@ -484,15 +504,17 @@ else:
     yxdb_yczj = gf_yx_yczs-sf_sb_ycjs
     yxdb_qtzj = gf_yx_qtzs-sf_sb_qtjs
     yxdb_jnbl = gf_yxjnbl
+    yxdb_bsbv = 1.3+gf_yx_bs-sf_sb_jbs
     yxdyx_gfc = gf_yxzl*(1+gf_yxdyx_gzkzxs) - sf_yxmf*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
     yxdyx_tyzj = gf_yx_tyzs- sf_yx_mf_tyjs
     yxdyx_jnzj = gf_yx_jnzs-sf_yx_jnjs
     yxdyx_yczj = gf_yx_yczs-sf_yx_ycjs
     yxdyx_qtzj = gf_yx_qtzs-sf_yx_qtjs
     yxdyx_jnbl = gf_yxjnbl
+    yxdyx_bsbv = 1.3+gf_yx_bs-sf_yx_jbs
 
 with st.expander("（点击打开查看）战斗攻防差与增减伤关系（注：已考虑克制系数、无视防御、地形修正）"):
-    chakan_gfczjs = pd.DataFrame({"攻守方": ["兵打兵","兵打英雄","英雄打兵","英雄打英雄"],"攻防差": [bdb_gfc,bdyx_gfc,yxdb_gfc,yxdyx_gfc],"通用增减%": [bdb_tyzj,bdyx_tyzj,yxdb_tyzj,yxdyx_tyzj],"技能增减%": [bdb_jnzj,bdyx_jnzj,yxdb_jnzj,yxdyx_jnzj],"远程增减%": [bdb_yczj,bdyx_yczj,yxdb_yczj,yxdyx_yczj],"其他增减%": [bdb_qtzj,bdyx_qtzj,yxdb_qtzj,yxdyx_qtzj],"技能倍率": [bdb_jnbl,bdyx_jnbl,yxdb_jnbl,yxdyx_jnbl],"单段": [bdb_dd_sh,bdyx_dd_sh,yxdb_dd_sh,yxdyx_dd_sh],"暴击单段": [bdb_ddbj_sh,bdyx_ddbj_sh,yxdb_ddbj_sh,yxdyx_ddbj_sh]})
+    chakan_gfczjs = pd.DataFrame({"攻守方": ["兵打兵","兵打英雄","英雄打兵","英雄打英雄"],"攻防差": [bdb_gfc,bdyx_gfc,yxdb_gfc,yxdyx_gfc],"通用增减%": [bdb_tyzj,bdyx_tyzj,yxdb_tyzj,yxdyx_tyzj],"技能增减%": [bdb_jnzj,bdyx_jnzj,yxdb_jnzj,yxdyx_jnzj],"远程增减%": [bdb_yczj,bdyx_yczj,yxdb_yczj,yxdyx_yczj],"其他增减%": [bdb_qtzj,bdyx_qtzj,yxdb_qtzj,yxdyx_qtzj],"技能倍率": [bdb_jnbl,bdyx_jnbl,yxdb_jnbl,yxdyx_jnbl],"单段": [bdb_dd_sh,bdyx_dd_sh,yxdb_dd_sh,yxdyx_dd_sh],"暴伤倍率": [bdb_bsbv,bdyx_bsbv,yxdb_bsbv,yxdyx_bsbv],"暴击单段": [bdb_ddbj_sh,bdyx_ddbj_sh,yxdb_ddbj_sh,yxdyx_ddbj_sh]})
     # 使用 style.format 将所有列格式化为一位小数
     chakan_gfczjs = chakan_gfczjs.style.format({
         "攻防差": "{:.1f}",
@@ -502,6 +524,7 @@ with st.expander("（点击打开查看）战斗攻防差与增减伤关系（�
         "其他增减%": "{:.1f}",
         "技能倍率": "{:.1f}",
         "单段": "{:.1f}",
+        "暴伤倍率": "{:.1f}",
         "暴击单段": "{:.1f}"
     })
     # 使用 st.dataframe 显示带有格式化的表格
@@ -1037,7 +1060,7 @@ text_shuoming = ("""使用说明：
 
 <span style="color: orange;">三、其他</span>
 
-（1）录入了神契特效、士兵科技特效的查询，可以更加方便查询。
+（1）录入了神契特效、士兵科技、职业克制系数的查询，可以更加方便查询。
 
 （2）做了一个战斗攻防差与增减伤关系的统计，已考虑了克制系数、无视防御、地形修正。以便更快捷的知道多少攻防差，多少增伤能打什么样的伤害，方便积累经验。
 
