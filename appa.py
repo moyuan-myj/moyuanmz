@@ -41,6 +41,14 @@ def bfb_shuru(baifenbi):
             st.warning("输入包含非法字符，请检查是否是英文的括号和乘除法*/，然后重新输入。否则此值不生效")
     return baifenbi
 
+# 在代码开头初始化三个空列表用于存储伤害值
+if 'saved_damage_yxdyx' not in st.session_state:
+    st.session_state.saved_damage_yxdyx = [] #英雄打英雄伤害存储列表
+if 'saved_damage_yxdb' not in st.session_state:
+    st.session_state.saved_damage_yxdb = [] #英雄打士兵伤害存储列表
+if 'saved_damage_zsh' not in st.session_state:
+    st.session_state.saved_damage_zsh = [] #总伤害存储列表
+
 #标题
 st.title('梦幻模拟战-AOE模拟计算器')
 
@@ -78,9 +86,9 @@ with column1:
         # 定义攻方英雄无视双防系数
         gf_yx_wsfy = st.text_input("无视双防系数%", "0")
         gf_yx_wsfy = bfb_shuru(gf_yx_wsfy)
-        # 定义攻方英雄技能倍率
-        gf_yxjnbl = st.text_input("攻方英雄技能倍率", "0")
-        gf_yxjnbl = mb_shuru(gf_yxjnbl)
+    # 定义攻方英雄技能倍率
+    gf_yxjnbl = st.text_input("攻方英雄技能倍率（别忘记填，不填没伤害）", "0")
+    gf_yxjnbl = mb_shuru(gf_yxjnbl)
     # 定义攻方英雄物理通用增伤
     gf_yx_tyzs = st.text_input("攻方英雄通用增伤%", "0")
     gf_yx_tyzs = bfb_shuru(gf_yx_tyzs)
@@ -139,15 +147,12 @@ with column3:
             sf_yx_jbs = bfb_shuru(sf_yx_jbs)
 
     with tab4:
-        column31, column32 = st.columns([1, 1])
-        with column31:
-            # 定义守方士兵防御
-            sf_sbfy = st.text_input("守方士兵防御", "0")
-            sf_sbfy = mb_shuru(sf_sbfy)
-        with column32:
-            # 定义守方士兵魔防
-            sf_sbmf = st.text_input("守方士兵魔防", "0")
-            sf_sbmf = mb_shuru(sf_sbmf)
+        # 定义守方士兵防御
+        sf_sbfy = st.text_input("守方士兵防御", "0")
+        sf_sbfy = mb_shuru(sf_sbfy)
+        # 定义守方士兵魔防
+        sf_sbmf = st.text_input("守方士兵魔防", "0")
+        sf_sbmf = mb_shuru(sf_sbmf)
 
         if yx_yxdb_kzpd:
             # 定义守方士兵与攻方英雄交战时双防克制系数加成
@@ -243,6 +248,12 @@ with st.expander("（点击打开查看）职业克制系数参考"):
          "魔物": ["", "", "", "", "", "", "","+80%", ""]})
     st.dataframe(chakan_kzxs)
 
+with st.expander("（点击打开查看）与AOE有关的士兵科技参考"):
+    chakan_sbkj = pd.DataFrame( {"士兵种类": ["步兵",  "步兵",  "枪兵", "枪兵", "骑兵","飞兵","弓兵","法师", "僧兵", "僧兵", "魔物"],
+             "科技名称": ["对枪特训", "应急处理", "对骑特训", "作战续行","对步特训","特技飞行","密林游侠", "圣光护佑","对魔特训", "圣光护佑", "污秽铠甲"],
+             "科技效果": ["对枪兵士兵攻防克制修正+30%", "士兵大于80%血，减伤20%","对骑兵士兵攻防克制修正+30%","士兵低于70%血时,减伤20%","对步兵士兵攻智防克制修正+30%","站地形时,减伤+20%","对飞兵士兵攻防克制修正+30%","部队满血时，减伤30%","对魔物士兵攻防克制修正+30%", "部队满血时，减伤30%","常驻双防+20%，但与魔物或僧侣交战时，双防克制修正-16%"]})
+    st.dataframe(chakan_sbkj)
+
 # 分割线
 st.divider()
 
@@ -300,13 +311,77 @@ with column9:
         yxdb_aoesj_sh = round(yxdb_aoe_sh, 2)
         st.markdown(f"##### 英雄打兵伤害为 <strong><span style='color:blue;font-size:25px;'>{yxdb_aoesj_sh}</span></strong>", unsafe_allow_html=True)
 
-# 分割线
-st.divider()
-
 aoe_zsh = round(yxdyx_aoesj_sh) + round(yxdb_aoesj_sh)
 
 st.markdown(f"##### 头上冒出的总伤害为（英雄+兵） <strong><span style='color:red;font-size:30px;'>{aoe_zsh}</span></strong>", unsafe_allow_html=True)
 
+if st.button("点击保存此段伤害"):
+    st.session_state.saved_damage_yxdyx.append(round(yxdyx_aoesj_sh))  # 保存英雄打英雄伤害
+    st.session_state.saved_damage_yxdb.append(round(yxdb_aoesj_sh)) # 保存英雄打兵伤害
+    st.session_state.saved_damage_zsh.append(round(yxdyx_aoesj_sh) + round(yxdb_aoesj_sh))  # 保存总伤害
 
+# 分割线
+st.divider()
 
+zhgs_pd = st.checkbox("是否有战后固伤（有就勾选）")
+if zhgs_pd:
+    zh_gs = st.text_input("战后固伤为", "0")
+    zh_gs = mb_shuru(zh_gs)
+else:
+    zh_gs = 0
+zh_gs = round(zh_gs)
 
+# 分割线
+st.divider()
+
+column55, column56, column57 = st.columns([1,0.1,1])
+with column55:
+    if st.button("删除一段最新储存的伤害值"):
+        if st.session_state.saved_damage_yxdyx:
+            st.session_state.saved_damage_yxdyx.pop()
+        if st.session_state.saved_damage_yxdb:
+            st.session_state.saved_damage_yxdb.pop()
+        if st.session_state.saved_damage_zsh:
+            st.session_state.saved_damage_zsh.pop()
+with column57:
+    if st.button("清空所有储存的伤害值"):
+        st.session_state.saved_damage_yxdyx = []
+        st.session_state.saved_damage_yxdb = []
+        st.session_state.saved_damage_zsh = []
+
+st.write("  ")
+
+column97, column98, column99 = st.columns([1,1,1])
+
+with column97:
+    st.write("##### 英雄打英雄")
+    # 显示英雄打英雄所有的伤害值
+    for i, damage_yxdyx in enumerate(st.session_state.saved_damage_yxdyx, start=1):
+        st.write(f"第{i}段伤害值为 {damage_yxdyx}")
+    if zhgs_pd:
+        st.write(f"战后固伤: {zh_gs}")
+    # 计算总伤害
+    total_damage_yxdyx = sum(st.session_state.saved_damage_yxdyx)
+    st.markdown(f"英雄打英雄总伤害: <strong><span style='color:green;font-size:20px;'>{total_damage_yxdyx + zh_gs}</span></strong>", unsafe_allow_html=True)
+
+with column98:
+    st.write("##### 英雄打兵")
+    # 显示英雄打兵所有的伤害值
+    for j, damage_yxdb in enumerate(st.session_state.saved_damage_yxdb, start=1):
+        st.write(f"第{j}段伤害值为 {damage_yxdb}")
+    if zhgs_pd:
+        st.write(f"战后固伤: {zh_gs}")
+    # 计算总伤害
+    total_damage_yxdb = sum(st.session_state.saved_damage_yxdb)
+    st.markdown(f"英雄打兵总伤害: <strong><span style='color:blue;font-size:20px;'>{total_damage_yxdb + zh_gs}</span></strong>", unsafe_allow_html=True)
+
+with column99:
+    st.write("##### 总伤害（英雄+兵）")
+    # 显示总伤害（英雄+兵）所有的伤害值
+    for k, damage_zsh in enumerate(st.session_state.saved_damage_zsh, start=1):
+        st.write(f"第{k}段伤害值为 {damage_zsh}")
+    if zhgs_pd:
+        st.write(f"战后固伤: {zh_gs*2}")
+    # 计算总伤害
+    total_damage_zsh = sum(st.session_state.saved_damage_zsh)
+    st.markdown(f"打（英雄+兵）总伤害: <strong><span style='color:red;font-size:20px;'>{total_damage_zsh + zh_gs*2}</span></strong>", unsafe_allow_html=True)
