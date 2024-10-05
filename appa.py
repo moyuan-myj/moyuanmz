@@ -48,13 +48,7 @@ if 'saved_damage_yxdb' not in st.session_state:
 if 'saved_damage_zsh' not in st.session_state:
     st.session_state.saved_damage_zsh = [] #总伤害存储列表
 
-# 初始化存储最终伤害结果的列表（考虑护盾值的计算）
-if 'saved_damage_yxdyx_zz' not in st.session_state:
-    st.session_state.saved_damage_yxdyx_zz = [] #英雄打英雄最终伤害存储列表
-if 'saved_damage_yxdb_zz' not in st.session_state:
-    st.session_state.saved_damage_yxdb_zz = [] #英雄打士兵最终伤害存储列表
-if 'saved_damage_zsh_zz' not in st.session_state:
-    st.session_state.saved_damage_zsh_zz = [] #总伤害最终存储列表
+# 初始化存储护盾值的列表
 if 'saved_hudun_cs_value' not in st.session_state:
     st.session_state.saved_hudun_cs_value = [] #护盾承伤值的存储列表(总承伤)
 if 'saved_hudun_yxdyx_cs_value' not in st.session_state:
@@ -303,7 +297,7 @@ with column6:
 # 分割线
 st.divider()
 
-st.markdown(f"<strong><span style='color:red;font-size:20px;'>以下即将进行AOE战斗模拟</span></strong>", unsafe_allow_html=True)
+st.markdown(f"<strong><span style='color:red;font-size:25px;'>以下即将进行AOE战斗模拟</span></strong>", unsafe_allow_html=True)
 
 hudun_pd = st.checkbox("守方是否有护盾（有就勾选）")
 if hudun_pd:
@@ -359,18 +353,21 @@ yxdb = round(yxdb_aoesj_sh)
 st.write("  ")
 
 if st.button("点击保存此段伤害"):
-    st.session_state.saved_damage_yxdyx.append(round(yxdyx_aoesj_sh))  # 保存英雄打英雄伤害
-    st.session_state.saved_damage_yxdb.append(round(yxdb_aoesj_sh)) # 保存英雄打兵伤害
-    st.session_state.saved_damage_zsh.append(round(yxdyx_aoesj_sh) + round(yxdb_aoesj_sh))  # 保存总伤害
     hudun_sy_value = max(0,hudun_sy_value - sum(st.session_state.saved_hudun_cs_value))
     if zsh >= hudun_sy_value:
         if hudun_sy_value != 0:
             zsh_zz = zsh - hudun_sy_value
-            yxdyx_zz = round(zsh_zz*(yxdyx/zsh))
-            yxdb_zz = round(zsh_zz*(yxdb/zsh))
             hudun_cs_value = hudun_sy_value
-            hudun_yxdyx_cs_value = round(hudun_cs_value*(yxdyx/zsh))
-            hudun_yxdb_cs_value = round(hudun_cs_value*(yxdb/zsh))
+            if zsh == 0:
+                yxdyx_zz = 0
+                yxdb_zz = 0
+                hudun_yxdyx_cs_value = 0
+                hudun_yxdb_cs_value = 0
+            else:
+                yxdyx_zz = round(zsh_zz * (yxdyx / zsh))
+                yxdb_zz = round(zsh_zz * (yxdb / zsh))
+                hudun_yxdyx_cs_value = round(hudun_cs_value*(yxdyx/zsh))
+                hudun_yxdb_cs_value = round(hudun_cs_value*(yxdb/zsh))
         else:
             zsh_zz = zsh
             yxdyx_zz = yxdyx
@@ -383,15 +380,19 @@ if st.button("点击保存此段伤害"):
         yxdyx_zz = 0
         yxdb_zz = 0
         hudun_cs_value = zsh
-        hudun_yxdyx_cs_value = round(hudun_cs_value * (yxdyx / zsh))
-        hudun_yxdb_cs_value = round(hudun_cs_value * (yxdb / zsh))
+        if zsh == 0:
+            hudun_yxdyx_cs_value = 0
+            hudun_yxdb_cs_value = 0
+        else:
+            hudun_yxdyx_cs_value = round(hudun_cs_value * (yxdyx / zsh))
+            hudun_yxdb_cs_value = round(hudun_cs_value * (yxdb / zsh))
     # 储存计算结果
-    st.session_state.saved_damage_yxdyx_zz.append(yxdyx_zz)
-    st.session_state.saved_damage_yxdb_zz.append(yxdb_zz)
-    st.session_state.saved_damage_zsh_zz.append(zsh_zz)
-    st.session_state.saved_hudun_cs_value.append(hudun_cs_value)
-    st.session_state.saved_hudun_yxdyx_cs_value.append(hudun_yxdyx_cs_value)
-    st.session_state.saved_hudun_yxdb_cs_value.append(hudun_yxdb_cs_value)
+    st.session_state.saved_damage_yxdyx.append(yxdyx_zz) # 保存英雄打英雄伤害
+    st.session_state.saved_damage_yxdb.append(yxdb_zz) # 保存英雄打兵伤害
+    st.session_state.saved_damage_zsh.append(zsh_zz) # 保存总伤害
+    st.session_state.saved_hudun_cs_value.append(hudun_cs_value) # 保存护盾承伤值（总伤害）
+    st.session_state.saved_hudun_yxdyx_cs_value.append(hudun_yxdyx_cs_value) # 保存护盾承伤值（英雄打英雄）
+    st.session_state.saved_hudun_yxdb_cs_value.append(hudun_yxdb_cs_value) # 保存护盾承伤值（英雄打兵）
 
 # 分割线
 st.divider()
@@ -405,12 +406,6 @@ with column55:
             st.session_state.saved_damage_yxdb.pop()
         if st.session_state.saved_damage_zsh:
             st.session_state.saved_damage_zsh.pop()
-        if st.session_state.saved_damage_yxdyx_zz:
-            st.session_state.saved_damage_yxdyx_zz.pop()
-        if st.session_state.saved_damage_yxdb_zz:
-            st.session_state.saved_damage_yxdb_zz.pop()
-        if st.session_state.saved_damage_zsh_zz:
-            st.session_state.saved_damage_zsh_zz.pop()
         if st.session_state.saved_hudun_cs_value:
             st.session_state.saved_hudun_cs_value.pop()
         if st.session_state.saved_hudun_yxdyx_cs_value:
@@ -422,9 +417,6 @@ with column57:
         st.session_state.saved_damage_yxdyx = []
         st.session_state.saved_damage_yxdb = []
         st.session_state.saved_damage_zsh = []
-        st.session_state.saved_damage_yxdyx_zz = []
-        st.session_state.saved_damage_yxdb_zz = []
-        st.session_state.saved_damage_zsh_zz = []
         st.session_state.saved_hudun_cs_value = []
         st.session_state.saved_hudun_yxdyx_cs_value = []
         st.session_state.saved_hudun_yxdb_cs_value = []
@@ -434,43 +426,43 @@ st.write("  ")
 column97, column98, column99 = st.columns([1,0.1,1])
 
 with column97:
-    st.markdown(f"<strong><span style='color:orange;font-size:20px;'>英雄打英雄</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"<strong><span style='color:green;font-size:20px;'>英雄打英雄</span></strong>", unsafe_allow_html=True)
     # 显示英雄打英雄所有的伤害值
-    for i, (damage_yxdyx_zz, hudun_yxdyx_cs) in enumerate(zip(st.session_state.saved_damage_yxdyx_zz,st.session_state.saved_hudun_yxdyx_cs_value), start=1):
-        st.write(f"第{i}段伤害值为 {damage_yxdyx_zz}")
+    for i, (damage_yxdyx, hudun_yxdyx_cs) in enumerate(zip(st.session_state.saved_damage_yxdyx,st.session_state.saved_hudun_yxdyx_cs_value), start=1):
         if hudun_yxdyx_cs != 0:
-            st.write(f"其中第{i}段护盾承伤值为 {hudun_yxdyx_cs}")
+            st.write(f"(护盾)已抵挡第{i}段伤害 {hudun_yxdyx_cs}")
+        st.write(f"第{i}段造成伤害值为 {damage_yxdyx}")
     if zhgs_pd:
         st.write(f"战后固伤: {zh_gs}")
     # 计算总伤害
-    total_damage_yxdyx = sum(st.session_state.saved_damage_yxdyx_zz)
+    total_damage_yxdyx = sum(st.session_state.saved_damage_yxdyx)
     st.markdown(f"英雄打英雄总伤害（不含护盾）: <strong><span style='color:green;font-size:20px;'>{total_damage_yxdyx + zh_gs}</span></strong>", unsafe_allow_html=True)
 
 with column99:
-    st.markdown(f"<strong><span style='color:orange;font-size:20px;'>英雄打兵</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"<strong><span style='color:blue;font-size:20px;'>英雄打兵</span></strong>", unsafe_allow_html=True)
     # 显示英雄打兵所有的伤害值
-    for j,  (damage_yxdb_zz, hudun_yxdb_cs) in enumerate(zip(st.session_state.saved_damage_yxdb_zz,st.session_state.saved_hudun_yxdb_cs_value), start=1):
-        st.write(f"第{j}段伤害值为 {damage_yxdb_zz}")
+    for j,  (damage_yxdb, hudun_yxdb_cs) in enumerate(zip(st.session_state.saved_damage_yxdb,st.session_state.saved_hudun_yxdb_cs_value), start=1):
         if hudun_yxdb_cs != 0:
-            st.write(f"其中第{j}段护盾承伤值为 {hudun_yxdb_cs}")
+            st.write(f"(护盾)已抵挡第{j}段伤害 {hudun_yxdb_cs}")
+        st.write(f"第{j}段造成伤害值为 {damage_yxdb}")
     if zhgs_pd:
         st.write(f"战后固伤: {zh_gs}")
     # 计算总伤害
-    total_damage_yxdb = sum(st.session_state.saved_damage_yxdb_zz)
+    total_damage_yxdb = sum(st.session_state.saved_damage_yxdb)
     st.markdown(f"英雄打兵总伤害（不含护盾）: <strong><span style='color:blue;font-size:20px;'>{total_damage_yxdb + zh_gs}</span></strong>", unsafe_allow_html=True)
 
 st.write("")
 
-st.markdown(f"<strong><span style='color:orange;font-size:20px;'>总伤害打（英雄+兵）</span></strong>", unsafe_allow_html=True)
+st.markdown(f"<strong><span style='color:red;font-size:20px;'>总伤害打（英雄+兵）</span></strong>", unsafe_allow_html=True)
 # 显示总伤害（英雄+兵）所有的伤害值
-for k, (damage_zsh_zz, hudun_zsh_cs) in enumerate(zip(st.session_state.saved_damage_zsh_zz,st.session_state.saved_hudun_cs_value), start=1):
-    st.write(f"第{k}段伤害值为 {damage_zsh_zz}")
+for k, (damage_zsh, hudun_zsh_cs) in enumerate(zip(st.session_state.saved_damage_zsh,st.session_state.saved_hudun_cs_value), start=1):
     if hudun_zsh_cs != 0:
-        st.write(f"其中第{k}段护盾承伤值为 {hudun_zsh_cs}")
+        st.write(f"(护盾)已抵挡第{k}段伤害 {hudun_zsh_cs}")
+    st.write(f"第{k}段造成伤害值为 {damage_zsh}")
 if zhgs_pd:
     st.write(f"战后固伤: {zh_gs*2}")
 # 计算总伤害
-total_damage_zsh = sum(st.session_state.saved_damage_zsh_zz)
+total_damage_zsh = sum(st.session_state.saved_damage_zsh)
 st.markdown(f"打（英雄+兵）总伤害（不含护盾）: <strong><span style='color:red;font-size:20px;'>{total_damage_zsh + zh_gs*2}</span></strong>", unsafe_allow_html=True)
 
 # 分割线
