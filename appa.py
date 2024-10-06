@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import re
+import math
 
 #定义面板输入函数
 def mb_shuru(shuxing):
@@ -434,8 +435,8 @@ if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0 and zhgs_pd: #�
         zh_gs_yxdb_hudun_cs = zh_gs
         zh_gs_zsh_hudun_cs = zh_gs*2
     else:
-        zh_gs_yxdyx = round((zh_gs*2 - hudun_sy_value_zh_gs)/2)
-        zh_gs_yxdb = round((zh_gs*2 - hudun_sy_value_zh_gs)/2)
+        zh_gs_yxdyx = math.floor((zh_gs*2 - hudun_sy_value_zh_gs)/2)
+        zh_gs_yxdb = math.ceil((zh_gs*2 - hudun_sy_value_zh_gs)/2)
         zh_gs_zsh = zh_gs_yxdyx + zh_gs_yxdb
         zh_gs_yxdyx_hudun_cs = hudun_sy_value_zh_gs/2
         zh_gs_yxdb_hudun_cs = hudun_sy_value_zh_gs/2
@@ -473,7 +474,7 @@ with column99:
     if zhgs_pd:
         if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0:
             st.write(f"(护盾)已抵挡战后固伤 {zh_gs_yxdb_hudun_cs}")
-        st.write(f"战后固伤: {zh_gs_yxdb}")
+        st.write(f"战后固伤造成伤害值为: {zh_gs_yxdb}")
     # 计算总伤害
     total_damage_yxdb = sum(st.session_state.saved_damage_yxdb)
     st.markdown(f"英雄打兵总伤害（不含护盾）: <strong><span style='color:blue;font-size:20px;'>{total_damage_yxdb + zh_gs_yxdb}</span></strong>", unsafe_allow_html=True)
@@ -489,7 +490,7 @@ for k, (damage_zsh, hudun_zsh_cs) in enumerate(zip(st.session_state.saved_damage
 if zhgs_pd:
     if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0:
         st.write(f"(护盾)已抵挡战后固伤 {zh_gs_zsh_hudun_cs}")
-    st.write(f"战后固伤: {zh_gs_zsh}")
+    st.write(f"战后固伤造成伤害值为: {zh_gs_zsh}")
 # 计算总伤害
 total_damage_zsh = sum(st.session_state.saved_damage_zsh)
 st.markdown(f"打（英雄+兵）总伤害（不含护盾）: <strong><span style='color:red;font-size:20px;'>{total_damage_zsh + zh_gs_zsh}</span></strong>", unsafe_allow_html=True)
