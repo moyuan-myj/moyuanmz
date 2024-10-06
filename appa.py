@@ -423,6 +423,29 @@ with column57:
 
 st.write("  ")
 
+#计算战后固伤
+if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0 and zhgs_pd: #如果多段AOE打完后还有护盾
+    hudun_sy_value_zh_gs = hudun_sy_value - sum(st.session_state.saved_hudun_cs_value) #打战后固伤前还剩余的护盾值
+    if zh_gs*2 <= hudun_sy_value_zh_gs:
+        zh_gs_yxdyx = 0
+        zh_gs_yxdb = 0
+        zh_gs_zsh = 0
+        zh_gs_yxdyx_hudun_cs = zh_gs
+        zh_gs_yxdb_hudun_cs = zh_gs
+        zh_gs_zsh_hudun_cs = zh_gs*2
+    else:
+        zh_gs_yxdyx = round((zh_gs*2 - hudun_sy_value_zh_gs)/2)
+        zh_gs_yxdb = round((zh_gs*2 - hudun_sy_value_zh_gs)/2)
+        zh_gs_zsh = zh_gs_yxdyx + zh_gs_yxdb
+        zh_gs_yxdyx_hudun_cs = hudun_sy_value_zh_gs/2
+        zh_gs_yxdb_hudun_cs = hudun_sy_value_zh_gs/2
+        zh_gs_zsh_hudun_cs = hudun_sy_value_zh_gs
+else:
+    zh_gs_yxdyx = zh_gs
+    zh_gs_yxdb = zh_gs
+    zh_gs_zsh = zh_gs*2
+    zh_gs_zsh_hudun_cs = 0
+
 column97, column98, column99 = st.columns([1,0.1,1])
 
 with column97:
@@ -433,10 +456,12 @@ with column97:
             st.write(f"(护盾)已抵挡第{i}段伤害 {hudun_yxdyx_cs}")
         st.write(f"第{i}段造成伤害值为 {damage_yxdyx}")
     if zhgs_pd:
-        st.write(f"战后固伤: {zh_gs}")
+        if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0:
+            st.write(f"(护盾)已抵挡战后固伤 {zh_gs_yxdyx_hudun_cs}")
+        st.write(f"战后固伤造成伤害值为: {zh_gs_yxdyx}")
     # 计算总伤害
     total_damage_yxdyx = sum(st.session_state.saved_damage_yxdyx)
-    st.markdown(f"英雄打英雄总伤害（不含护盾）: <strong><span style='color:green;font-size:20px;'>{total_damage_yxdyx + zh_gs}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"英雄打英雄总伤害（不含护盾）: <strong><span style='color:green;font-size:20px;'>{total_damage_yxdyx + zh_gs_yxdyx}</span></strong>", unsafe_allow_html=True)
 
 with column99:
     st.markdown(f"<strong><span style='color:blue;font-size:20px;'>英雄打兵</span></strong>", unsafe_allow_html=True)
@@ -446,10 +471,12 @@ with column99:
             st.write(f"(护盾)已抵挡第{j}段伤害 {hudun_yxdb_cs}")
         st.write(f"第{j}段造成伤害值为 {damage_yxdb}")
     if zhgs_pd:
-        st.write(f"战后固伤: {zh_gs}")
+        if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0:
+            st.write(f"(护盾)已抵挡战后固伤 {zh_gs_yxdb_hudun_cs}")
+        st.write(f"战后固伤: {zh_gs_yxdb}")
     # 计算总伤害
     total_damage_yxdb = sum(st.session_state.saved_damage_yxdb)
-    st.markdown(f"英雄打兵总伤害（不含护盾）: <strong><span style='color:blue;font-size:20px;'>{total_damage_yxdb + zh_gs}</span></strong>", unsafe_allow_html=True)
+    st.markdown(f"英雄打兵总伤害（不含护盾）: <strong><span style='color:blue;font-size:20px;'>{total_damage_yxdb + zh_gs_yxdb}</span></strong>", unsafe_allow_html=True)
 
 st.write("")
 
@@ -460,10 +487,20 @@ for k, (damage_zsh, hudun_zsh_cs) in enumerate(zip(st.session_state.saved_damage
         st.write(f"(护盾)已抵挡第{k}段伤害 {hudun_zsh_cs}")
     st.write(f"第{k}段造成伤害值为 {damage_zsh}")
 if zhgs_pd:
-    st.write(f"战后固伤: {zh_gs*2}")
+    if hudun_value - sum(st.session_state.saved_hudun_cs_value) > 0:
+        st.write(f"(护盾)已抵挡战后固伤 {zh_gs_zsh_hudun_cs}")
+    st.write(f"战后固伤: {zh_gs_zsh}")
 # 计算总伤害
 total_damage_zsh = sum(st.session_state.saved_damage_zsh)
-st.markdown(f"打（英雄+兵）总伤害（不含护盾）: <strong><span style='color:red;font-size:20px;'>{total_damage_zsh + zh_gs*2}</span></strong>", unsafe_allow_html=True)
+st.markdown(f"打（英雄+兵）总伤害（不含护盾）: <strong><span style='color:red;font-size:20px;'>{total_damage_zsh + zh_gs_zsh}</span></strong>", unsafe_allow_html=True)
+
+st.write("")
+if hudun_pd:
+    if zhgs_pd:
+        hudun_sy_value = max(0,hudun_value - sum(st.session_state.saved_hudun_cs_value) - zh_gs_zsh_hudun_cs)
+    else:
+        hudun_sy_value = max(0,hudun_value - sum(st.session_state.saved_hudun_cs_value))
+    st.markdown(f"护盾剩余值: <strong><span style='color:orange;font-size:20px;'>{hudun_sy_value}</span></strong>", unsafe_allow_html=True)
 
 # 分割线
 st.divider()
