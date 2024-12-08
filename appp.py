@@ -484,32 +484,32 @@ else:
 #定义英雄打英雄 攻防差yxdyx_gfc 通用增减%yxdyx_tyzj 技能增减%yxdyx_jnzj 远程增减%yxdyx_yczj 其他增减%yxdyx_qtzj 技能倍率yxdyx_jnbl 爆伤倍率yxdyx_bsbv
 if yxsh_lx == "物理":
     yxdb_gfc = gf_yxgj*(1+gf_yxdsb_gzkzxs) - sf_sbfy*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
-    yxdb_tyzj = gf_yx_tyzs-sf_sb_wl_tyjs
-    yxdb_jnzj = gf_yx_jnzs-sf_sb_jnjs
-    yxdb_yczj = gf_yx_yczs-sf_sb_ycjs
-    yxdb_qtzj = gf_yx_qtzs-sf_sb_qtjs
+    yxdb_tyzj = (gf_yx_tyzs-sf_sb_wl_tyjs)*100
+    yxdb_jnzj = (gf_yx_jnzs-sf_sb_jnjs)*100
+    yxdb_yczj = (gf_yx_yczs-sf_sb_ycjs)*100
+    yxdb_qtzj = (gf_yx_qtzs-sf_sb_qtjs)*100
     yxdb_jnbl = gf_yxjnbl
     yxdb_bsbv = 1.3+gf_yx_bs-sf_sb_jbs
     yxdyx_gfc = gf_yxgj*(1+gf_yxdyx_gzkzxs) - sf_yxfy*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
-    yxdyx_tyzj = gf_yx_tyzs- sf_yx_wl_tyjs
-    yxdyx_jnzj = gf_yx_jnzs-sf_yx_jnjs
-    yxdyx_yczj = gf_yx_yczs-sf_yx_ycjs
-    yxdyx_qtzj = gf_yx_qtzs-sf_yx_qtjs
+    yxdyx_tyzj = (gf_yx_tyzs- sf_yx_wl_tyjs)*100
+    yxdyx_jnzj = (gf_yx_jnzs-sf_yx_jnjs)*100
+    yxdyx_yczj = (gf_yx_yczs-sf_yx_ycjs)*100
+    yxdyx_qtzj = (gf_yx_qtzs-sf_yx_qtjs)*100
     yxdyx_jnbl = gf_yxjnbl
     yxdyx_bsbv = 1.3+gf_yx_bs-sf_yx_jbs
 else:
     yxdb_gfc = gf_yxzl*(1+gf_yxdsb_gzkzxs) - sf_sbmf*(1+sf_sbdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
-    yxdb_tyzj = gf_yx_tyzs-sf_sb_mf_tyjs
-    yxdb_jnzj = gf_yx_jnzs-sf_sb_jnjs
-    yxdb_yczj = gf_yx_yczs-sf_sb_ycjs
-    yxdb_qtzj = gf_yx_qtzs-sf_sb_qtjs
+    yxdb_tyzj = (gf_yx_tyzs-sf_sb_mf_tyjs)*100
+    yxdb_jnzj = (gf_yx_jnzs-sf_sb_jnjs)*100
+    yxdb_yczj = (gf_yx_yczs-sf_sb_ycjs)*100
+    yxdb_qtzj = (gf_yx_qtzs-sf_sb_qtjs)*100
     yxdb_jnbl = gf_yxjnbl
     yxdb_bsbv = 1.3+gf_yx_bs-sf_sb_jbs
     yxdyx_gfc = gf_yxzl*(1+gf_yxdyx_gzkzxs) - sf_yxmf*(1+sf_yxdyx_sfkzxs+sf_dxxz)*(1-gf_yx_wsfy)
-    yxdyx_tyzj = gf_yx_tyzs- sf_yx_mf_tyjs
-    yxdyx_jnzj = gf_yx_jnzs-sf_yx_jnjs
-    yxdyx_yczj = gf_yx_yczs-sf_yx_ycjs
-    yxdyx_qtzj = gf_yx_qtzs-sf_yx_qtjs
+    yxdyx_tyzj = (gf_yx_tyzs- sf_yx_mf_tyjs)*100
+    yxdyx_jnzj = (gf_yx_jnzs-sf_yx_jnjs)*100
+    yxdyx_yczj = (gf_yx_yczs-sf_yx_ycjs)*100
+    yxdyx_qtzj = (gf_yx_qtzs-sf_yx_qtjs)*100
     yxdyx_jnbl = gf_yxjnbl
     yxdyx_bsbv = 1.3+gf_yx_bs-sf_yx_jbs
 
