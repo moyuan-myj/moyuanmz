@@ -361,14 +361,14 @@ if sbsh_lx == "物理":
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄物理伤害
     bdyx_dd_sh = (gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxfy*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_wl_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
-    bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
+    bdyx_ddbj_sh = bdyx_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 else:
 #计算兵打兵魔法伤害
     bdb_dd_sh = (gf_sbgj*(1+gf_sbdsb_gzkzxs) - sf_sbmf*(1+sf_sbdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs-sf_sb_mf_tyjs) * (1+gf_sb_jnzs-sf_sb_jnjs) * (1+gf_sb_yczs-sf_sb_ycjs) * (1+gf_sb_qtzs-sf_sb_qtjs) * 0.5
     bdb_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_sb_jbs)
 #计算兵打英雄魔法伤害
     bdyx_dd_sh = (gf_sbgj*(1+gf_sbdyx_gzkzxs) - sf_yxmf*(1+sf_yxdsb_sfkzxs+sf_dxxz)*(1-gf_sb_wsfy)) * gf_sbjnbl * (1+gf_sb_tyzs- sf_yx_mf_tyjs) * (1+gf_sb_jnzs-sf_yx_jnjs) * (1+gf_sb_yczs-sf_yx_ycjs) * (1+gf_sb_qtzs-sf_yx_qtjs) * 0.5
-    bdyx_ddbj_sh = bdb_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
+    bdyx_ddbj_sh = bdyx_dd_sh * (1.3+gf_sb_bs-sf_yx_jbs)
 
 #定义英雄打兵单段伤害 yxdb_dd_sh
 #定义英雄打兵单段暴击伤害 yxdb_ddbj_sh
