@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 import re
 
 st.set_option("server.fileWatcherType", "none")
@@ -143,7 +144,8 @@ if selection == "英雄面板模拟":
         df = pd.read_csv(file_path)  # 读取CSV文件
         return df
     # 加载数据
-    csv_file_path = './data/梦战英雄白字.csv'  # 替换为实际文件路径
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path = os.path.join(base_dir, "data", "梦战英雄白字.csv")
     df1 = load_data(csv_file_path)
 
     # 英雄选择
@@ -189,7 +191,7 @@ if selection == "英雄面板模拟":
         column11, column12, column13 = st.columns([1, 0.1, 0.5])
         with column11:
             # 读取 装备基础属性CSV 文件
-            file_path = "./data/梦战装备满级基础属性分类.csv"  # 读取CSV文件路径
+            file_path = os.path.join(base_dir, "data", "梦战装备满级基础属性分类.csv") # 读取CSV文件路径
             df2 = load_data(file_path)
 
             # 将数据转换为字典，按“名称”索引
