@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import re
 
+st.set_option("server.fileWatcherType", "none")
+
 #定义面板输入函数
 def mb_shuru(shuxing):
     if shuxing == "":
