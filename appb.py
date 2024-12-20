@@ -108,17 +108,53 @@ if 'sq_zjc' not in st.session_state:
     st.session_state.sq_zjc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0,"士兵生命":0,"士兵攻击":0,"士兵防御":0,"士兵魔防":0}  # 初始化神契总加成 字典
 
 # 初始化附魔选取的列表
-bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
-bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
-bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
-gdz_numbers6 = list(range(0, 7))
-gdz_numbers10 = list(range(0, 11))
-gdz_numbers12 = list(range(0, 13))
-gdz_numbers18 = list(range(0, 19))
-gdz_numbers20 = list(range(0, 21))
-gdz_numbers30 = list(range(0, 31))
-gdz_numbers130 = list(range(0, 131))
-gdz_numbers200 = list(range(0, 201))
+wq_sm_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+wq_gj_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+wq_zl_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+wq_fy_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+wq_mf_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+
+yf_sm_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+yf_gj_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+yf_zl_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+yf_fy_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+yf_mf_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+
+ts_sm_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+ts_gj_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+ts_zl_bfb_percentages5 = ["5%","4%","3%","2%","1%","0%"]
+ts_fy_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+ts_mf_bfb_percentages15 = ["15%","14%","13%","12%","11%","10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+
+sp_sm_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+sp_gj_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+sp_zl_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+sp_fy_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+sp_mf_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
+
+wq_sm_gdz_numbers130 = list(range(0, 131))
+wq_gj_gdz_numbers30 = list(range(0, 31))
+wq_zl_gdz_numbers30 = list(range(0, 31))
+wq_fy_gdz_numbers6 = list(range(0, 7))
+wq_mf_gdz_numbers6 = list(range(0, 7))
+
+yf_sm_gdz_numbers200 = list(range(0, 201))
+yf_gj_gdz_numbers10 = list(range(0, 11))
+yf_zl_gdz_numbers10 = list(range(0, 11))
+yf_fy_gdz_numbers18 = list(range(0, 19))
+yf_mf_gdz_numbers18 = list(range(0, 19))
+
+ts_sm_gdz_numbers200 = list(range(0, 201))
+ts_gj_gdz_numbers10 = list(range(0, 11))
+ts_zl_gdz_numbers10 = list(range(0, 11))
+ts_fy_gdz_numbers18 = list(range(0, 19))
+ts_mf_gdz_numbers18 = list(range(0, 19))
+
+sp_sm_gdz_numbers130 = list(range(0, 131))
+sp_gj_gdz_numbers20 = list(range(0, 21))
+sp_zl_gdz_numbers20 = list(range(0, 21))
+sp_fy_gdz_numbers12 = list(range(0, 13))
+sp_mf_gdz_numbers12 = list(range(0, 13))
 
 # 根据选项显示不同的内容
 if selection == "英雄面板模拟":
@@ -238,9 +274,8 @@ if selection == "英雄面板模拟":
             st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {st.session_state.zb_jc["技巧"]}</span></strong>",unsafe_allow_html=True)
 
     with tab2:
-        column21,column211,column22,column221,column23 = st.columns([1,0.4,1,0.4,1])
+        column21,column211,column22,column221,column23 = st.columns([1,0.1,1,0.1,1])
         with column21:
-            zb_fmwz = st.radio("选择附魔位置", ("武器","衣服","头饰","饰品"))
 
             gm_fm_1 = st.selectbox("第一个共鸣2件套", ("无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"))
             gm_fm_2 = st.selectbox("第二个共鸣2件套", ("无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"))
@@ -280,55 +315,55 @@ if selection == "英雄面板模拟":
                 st.session_state.gmfm_bfb["魔防"] = st.session_state.gmfm_bfb["魔防"]/2
 
         with column22:
-            if zb_fmwz == "武器":
-                st.session_state.wqfm_bfb["生命"] = st.selectbox("生命%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.wqfm_bfb["生命"])) # 武器生命百分比附魔
-                st.session_state.wqfm_bfb["攻击"] = st.selectbox("攻击%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.wqfm_bfb["攻击"])) # 武器攻击百分比附魔
-                st.session_state.wqfm_bfb["智力"] = st.selectbox("智力%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.wqfm_bfb["智力"])) # 武器智力百分比附魔
-                st.session_state.wqfm_bfb["防御"] = st.selectbox("防御%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.wqfm_bfb["防御"])) # 武器防御百分比附魔
-                st.session_state.wqfm_bfb["魔防"] = st.selectbox("魔防%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.wqfm_bfb["魔防"])) # 武器魔防百分比附魔
-            elif zb_fmwz == "衣服":
-                st.session_state.yffm_bfb["生命"] = st.selectbox("生命%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.yffm_bfb["生命"])) # 衣服生命百分比附魔
-                st.session_state.yffm_bfb["攻击"] = st.selectbox("攻击%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.yffm_bfb["攻击"])) # 衣服攻击百分比附魔
-                st.session_state.yffm_bfb["智力"] = st.selectbox("智力%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.yffm_bfb["智力"])) # 衣服智力百分比附魔
-                st.session_state.yffm_bfb["防御"] = st.selectbox("防御%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.yffm_bfb["防御"])) # 衣服防御百分比附魔
-                st.session_state.yffm_bfb["魔防"] = st.selectbox("魔防%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.yffm_bfb["魔防"])) # 衣服魔防百分比附魔
-            elif zb_fmwz == "头饰":
-                st.session_state.tsfm_bfb["生命"] = st.selectbox("生命%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.tsfm_bfb["生命"])) # 头饰生命百分比附魔
-                st.session_state.tsfm_bfb["攻击"] = st.selectbox("攻击%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.tsfm_bfb["攻击"])) # 头饰攻击百分比附魔
-                st.session_state.tsfm_bfb["智力"] = st.selectbox("智力%",bfb_percentages5,index=bfb_percentages5.index(st.session_state.tsfm_bfb["智力"])) # 头饰智力百分比附魔
-                st.session_state.tsfm_bfb["防御"] = st.selectbox("防御%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.tsfm_bfb["防御"])) # 头饰防御百分比附魔
-                st.session_state.tsfm_bfb["魔防"] = st.selectbox("魔防%",bfb_percentages15,index=bfb_percentages15.index(st.session_state.tsfm_bfb["魔防"])) # 头饰魔防百分比附魔
-            elif zb_fmwz == "饰品":
-                st.session_state.spfm_bfb["生命"] = st.selectbox("生命%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.spfm_bfb["生命"])) # 饰品生命百分比附魔
-                st.session_state.spfm_bfb["攻击"] = st.selectbox("攻击%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.spfm_bfb["攻击"])) # 饰品攻击百分比附魔
-                st.session_state.spfm_bfb["智力"] = st.selectbox("智力%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.spfm_bfb["智力"])) # 饰品智力百分比附魔
-                st.session_state.spfm_bfb["防御"] = st.selectbox("防御%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.spfm_bfb["防御"])) # 饰品防御百分比附魔
-                st.session_state.spfm_bfb["魔防"] = st.selectbox("魔防%",bfb_percentages10,index=bfb_percentages10.index(st.session_state.spfm_bfb["魔防"])) # 饰品魔防百分比附魔
+            with st.expander("武器（百分比）附魔"):
+                st.session_state.wqfm_bfb["生命"] = st.selectbox("生命%",wq_sm_bfb_percentages10,index=wq_sm_bfb_percentages10.index(st.session_state.wqfm_bfb["生命"]),key="wq_bfb_01") # 武器生命百分比附魔
+                st.session_state.wqfm_bfb["攻击"] = st.selectbox("攻击%",wq_gj_bfb_percentages15,index=wq_gj_bfb_percentages15.index(st.session_state.wqfm_bfb["攻击"]),key="wq_bfb_02") # 武器攻击百分比附魔
+                st.session_state.wqfm_bfb["智力"] = st.selectbox("智力%",wq_zl_bfb_percentages15,index=wq_zl_bfb_percentages15.index(st.session_state.wqfm_bfb["智力"]),key="wq_bfb_03") # 武器智力百分比附魔
+                st.session_state.wqfm_bfb["防御"] = st.selectbox("防御%",wq_fy_bfb_percentages5,index=wq_fy_bfb_percentages5.index(st.session_state.wqfm_bfb["防御"]),key="wq_bfb_04") # 武器防御百分比附魔
+                st.session_state.wqfm_bfb["魔防"] = st.selectbox("魔防%",wq_mf_bfb_percentages5,index=wq_mf_bfb_percentages5.index(st.session_state.wqfm_bfb["魔防"]),key="wq_bfb_05") # 武器魔防百分比附魔
+            with st.expander("衣服（百分比）附魔"):
+                st.session_state.yffm_bfb["生命"] = st.selectbox("生命%",yf_sm_bfb_percentages15,index=yf_sm_bfb_percentages15.index(st.session_state.yffm_bfb["生命"]),key="sf_bfb_01") # 衣服生命百分比附魔
+                st.session_state.yffm_bfb["攻击"] = st.selectbox("攻击%",yf_gj_bfb_percentages5,index=yf_gj_bfb_percentages5.index(st.session_state.yffm_bfb["攻击"]),key="sf_bfb_02") # 衣服攻击百分比附魔
+                st.session_state.yffm_bfb["智力"] = st.selectbox("智力%",yf_zl_bfb_percentages5,index=yf_zl_bfb_percentages5.index(st.session_state.yffm_bfb["智力"]),key="sf_bfb_03") # 衣服智力百分比附魔
+                st.session_state.yffm_bfb["防御"] = st.selectbox("防御%",yf_fy_bfb_percentages15,index=yf_fy_bfb_percentages15.index(st.session_state.yffm_bfb["防御"]),key="sf_bfb_04") # 衣服防御百分比附魔
+                st.session_state.yffm_bfb["魔防"] = st.selectbox("魔防%",yf_mf_bfb_percentages15,index=yf_mf_bfb_percentages15.index(st.session_state.yffm_bfb["魔防"]),key="sf_bfb_05") # 衣服魔防百分比附魔
+            with st.expander("头饰（百分比）附魔"):
+                st.session_state.tsfm_bfb["生命"] = st.selectbox("生命%",ts_sm_bfb_percentages15,index=ts_sm_bfb_percentages15.index(st.session_state.tsfm_bfb["生命"]),key="ts_bfb_01") # 头饰生命百分比附魔
+                st.session_state.tsfm_bfb["攻击"] = st.selectbox("攻击%",ts_gj_bfb_percentages5,index=ts_gj_bfb_percentages5.index(st.session_state.tsfm_bfb["攻击"]),key="ts_bfb_02") # 头饰攻击百分比附魔
+                st.session_state.tsfm_bfb["智力"] = st.selectbox("智力%",ts_zl_bfb_percentages5,index=ts_zl_bfb_percentages5.index(st.session_state.tsfm_bfb["智力"]),key="ts_bfb_03") # 头饰智力百分比附魔
+                st.session_state.tsfm_bfb["防御"] = st.selectbox("防御%",ts_fy_bfb_percentages15,index=ts_fy_bfb_percentages15.index(st.session_state.tsfm_bfb["防御"]),key="ts_bfb_04") # 头饰防御百分比附魔
+                st.session_state.tsfm_bfb["魔防"] = st.selectbox("魔防%",ts_mf_bfb_percentages15,index=ts_mf_bfb_percentages15.index(st.session_state.tsfm_bfb["魔防"]),key="ts_bfb_05") # 头饰魔防百分比附魔
+            with st.expander("饰品（百分比）附魔"):
+                st.session_state.spfm_bfb["生命"] = st.selectbox("生命%",sp_sm_bfb_percentages10,index=sp_sm_bfb_percentages10.index(st.session_state.spfm_bfb["生命"]),key="sp_bfb_01") # 饰品生命百分比附魔
+                st.session_state.spfm_bfb["攻击"] = st.selectbox("攻击%",sp_gj_bfb_percentages10,index=sp_gj_bfb_percentages10.index(st.session_state.spfm_bfb["攻击"]),key="sp_bfb_02") # 饰品攻击百分比附魔
+                st.session_state.spfm_bfb["智力"] = st.selectbox("智力%",sp_zl_bfb_percentages10,index=sp_zl_bfb_percentages10.index(st.session_state.spfm_bfb["智力"]),key="sp_bfb_03") # 饰品智力百分比附魔
+                st.session_state.spfm_bfb["防御"] = st.selectbox("防御%",sp_fy_bfb_percentages10,index=sp_fy_bfb_percentages10.index(st.session_state.spfm_bfb["防御"]),key="sp_bfb_04") # 饰品防御百分比附魔
+                st.session_state.spfm_bfb["魔防"] = st.selectbox("魔防%",sp_mf_bfb_percentages10,index=sp_mf_bfb_percentages10.index(st.session_state.spfm_bfb["魔防"]),key="sp_bfb_05") # 饰品魔防百分比附魔
         with column23:
-            if zb_fmwz == "武器":
-                st.session_state.wqfm_gdz["生命"] = st.selectbox("生命固定值",gdz_numbers130,index=gdz_numbers130.index(st.session_state.wqfm_gdz["生命"])) # 武器生命固定值附魔
-                st.session_state.wqfm_gdz["攻击"] = st.selectbox("攻击固定值",gdz_numbers30,index=gdz_numbers30.index(st.session_state.wqfm_gdz["攻击"])) # 武器攻击固定值附魔
-                st.session_state.wqfm_gdz["智力"] = st.selectbox("智力固定值",gdz_numbers30,index=gdz_numbers30.index(st.session_state.wqfm_gdz["智力"])) # 武器智力固定值附魔
-                st.session_state.wqfm_gdz["防御"] = st.selectbox("防御固定值",gdz_numbers6,index=gdz_numbers6.index(st.session_state.wqfm_gdz["防御"])) # 武器防御固定值附魔
-                st.session_state.wqfm_gdz["魔防"] = st.selectbox("魔防固定值",gdz_numbers6,index=gdz_numbers6.index(st.session_state.wqfm_gdz["魔防"])) # 武器魔防固定值附魔
-            elif zb_fmwz == "衣服":
-                st.session_state.yffm_gdz["生命"] = st.selectbox("生命固定值",gdz_numbers200,index=gdz_numbers200.index(st.session_state.yffm_gdz["生命"])) # 衣服生命固定值附魔
-                st.session_state.yffm_gdz["攻击"] = st.selectbox("攻击固定值",gdz_numbers10,index=gdz_numbers10.index(st.session_state.yffm_gdz["攻击"])) # 衣服攻击固定值附魔
-                st.session_state.yffm_gdz["智力"] = st.selectbox("智力固定值",gdz_numbers10,index=gdz_numbers10.index(st.session_state.yffm_gdz["智力"])) # 衣服智力固定值附魔
-                st.session_state.yffm_gdz["防御"] = st.selectbox("防御固定值",gdz_numbers18,index=gdz_numbers18.index(st.session_state.yffm_gdz["防御"])) # 衣服防御固定值附魔
-                st.session_state.yffm_gdz["魔防"] = st.selectbox("魔防固定值",gdz_numbers18,index=gdz_numbers18.index(st.session_state.yffm_gdz["魔防"])) # 衣服魔防固定值附魔
-            elif zb_fmwz == "头饰":
-                st.session_state.tsfm_gdz["生命"] = st.selectbox("生命固定值",gdz_numbers200,index=gdz_numbers200.index(st.session_state.tsfm_gdz["生命"])) # 头饰生命固定值附魔
-                st.session_state.tsfm_gdz["攻击"] = st.selectbox("攻击固定值",gdz_numbers10,index=gdz_numbers10.index(st.session_state.tsfm_gdz["攻击"])) # 头饰攻击固定值附魔
-                st.session_state.tsfm_gdz["智力"] = st.selectbox("智力固定值",gdz_numbers10,index=gdz_numbers10.index(st.session_state.tsfm_gdz["智力"])) # 头饰智力固定值附魔
-                st.session_state.tsfm_gdz["防御"] = st.selectbox("防御固定值",gdz_numbers18,index=gdz_numbers18.index(st.session_state.tsfm_gdz["防御"])) # 头饰防御固定值附魔
-                st.session_state.tsfm_gdz["魔防"] = st.selectbox("魔防固定值",gdz_numbers18,index=gdz_numbers18.index(st.session_state.tsfm_gdz["魔防"])) # 头饰魔防固定值附魔
-            elif zb_fmwz == "饰品":
-                st.session_state.spfm_gdz["生命"] = st.selectbox("生命固定值",gdz_numbers130,index=gdz_numbers130.index(st.session_state.spfm_gdz["生命"])) # 饰品生命固定值附魔
-                st.session_state.spfm_gdz["攻击"] = st.selectbox("攻击固定值",gdz_numbers20,index=gdz_numbers20.index(st.session_state.spfm_gdz["攻击"])) # 饰品攻击固定值附魔
-                st.session_state.spfm_gdz["智力"] = st.selectbox("智力固定值",gdz_numbers20,index=gdz_numbers20.index(st.session_state.spfm_gdz["智力"])) # 饰品智力固定值附魔
-                st.session_state.spfm_gdz["防御"] = st.selectbox("防御固定值",gdz_numbers12,index=gdz_numbers12.index(st.session_state.spfm_gdz["防御"])) # 饰品防御固定值附魔
-                st.session_state.spfm_gdz["魔防"] = st.selectbox("魔防固定值",gdz_numbers12,index=gdz_numbers12.index(st.session_state.spfm_gdz["魔防"])) # 饰品魔防固定值附魔
+            with st.expander("武器（固定值）附魔"):
+                st.session_state.wqfm_gdz["生命"] = st.selectbox("生命固定值",wq_sm_gdz_numbers130,index=wq_sm_gdz_numbers130.index(st.session_state.wqfm_gdz["生命"]),key="wq_gdz_01") # 武器生命固定值附魔
+                st.session_state.wqfm_gdz["攻击"] = st.selectbox("攻击固定值",wq_gj_gdz_numbers30,index=wq_gj_gdz_numbers30.index(st.session_state.wqfm_gdz["攻击"]),key="wq_gdz_02") # 武器攻击固定值附魔
+                st.session_state.wqfm_gdz["智力"] = st.selectbox("智力固定值",wq_zl_gdz_numbers30,index=wq_zl_gdz_numbers30.index(st.session_state.wqfm_gdz["智力"]),key="wq_gdz_03") # 武器智力固定值附魔
+                st.session_state.wqfm_gdz["防御"] = st.selectbox("防御固定值",wq_fy_gdz_numbers6,index=wq_fy_gdz_numbers6.index(st.session_state.wqfm_gdz["防御"]),key="wq_gdz_04") # 武器防御固定值附魔
+                st.session_state.wqfm_gdz["魔防"] = st.selectbox("魔防固定值",wq_mf_gdz_numbers6,index=wq_mf_gdz_numbers6.index(st.session_state.wqfm_gdz["魔防"]),key="wq_gdz_05") # 武器魔防固定值附魔
+            with st.expander("衣服（固定值）附魔"):
+                st.session_state.yffm_gdz["生命"] = st.selectbox("生命固定值",yf_sm_gdz_numbers200,index=yf_sm_gdz_numbers200.index(st.session_state.yffm_gdz["生命"]),key="yf_gdz_01") # 衣服生命固定值附魔
+                st.session_state.yffm_gdz["攻击"] = st.selectbox("攻击固定值",yf_gj_gdz_numbers10,index=yf_gj_gdz_numbers10.index(st.session_state.yffm_gdz["攻击"]),key="yf_gdz_02") # 衣服攻击固定值附魔
+                st.session_state.yffm_gdz["智力"] = st.selectbox("智力固定值",yf_zl_gdz_numbers10,index=yf_zl_gdz_numbers10.index(st.session_state.yffm_gdz["智力"]),key="yf_gdz_03") # 衣服智力固定值附魔
+                st.session_state.yffm_gdz["防御"] = st.selectbox("防御固定值",yf_fy_gdz_numbers18,index=yf_fy_gdz_numbers18.index(st.session_state.yffm_gdz["防御"]),key="yf_gdz_04") # 衣服防御固定值附魔
+                st.session_state.yffm_gdz["魔防"] = st.selectbox("魔防固定值",yf_mf_gdz_numbers18,index=yf_mf_gdz_numbers18.index(st.session_state.yffm_gdz["魔防"]),key="yf_gdz_05") # 衣服魔防固定值附魔
+            with st.expander("头饰（固定值）附魔"):
+                st.session_state.tsfm_gdz["生命"] = st.selectbox("生命固定值",ts_sm_gdz_numbers200,index=ts_sm_gdz_numbers200.index(st.session_state.tsfm_gdz["生命"]),key="ts_gdz_01") # 头饰生命固定值附魔
+                st.session_state.tsfm_gdz["攻击"] = st.selectbox("攻击固定值",ts_gj_gdz_numbers10,index=ts_gj_gdz_numbers10.index(st.session_state.tsfm_gdz["攻击"]),key="ts_gdz_02") # 头饰攻击固定值附魔
+                st.session_state.tsfm_gdz["智力"] = st.selectbox("智力固定值",ts_zl_gdz_numbers10,index=ts_zl_gdz_numbers10.index(st.session_state.tsfm_gdz["智力"]),key="ts_gdz_03") # 头饰智力固定值附魔
+                st.session_state.tsfm_gdz["防御"] = st.selectbox("防御固定值",ts_fy_gdz_numbers18,index=ts_fy_gdz_numbers18.index(st.session_state.tsfm_gdz["防御"]),key="ts_gdz_04") # 头饰防御固定值附魔
+                st.session_state.tsfm_gdz["魔防"] = st.selectbox("魔防固定值",ts_mf_gdz_numbers18,index=ts_mf_gdz_numbers18.index(st.session_state.tsfm_gdz["魔防"]),key="ts_gdz_05") # 头饰魔防固定值附魔
+            with st.expander("饰品（固定值）附魔"):
+                st.session_state.spfm_gdz["生命"] = st.selectbox("生命固定值",sp_sm_gdz_numbers130,index=sp_sm_gdz_numbers130.index(st.session_state.spfm_gdz["生命"]),key="sp_gdz_01") # 饰品生命固定值附魔
+                st.session_state.spfm_gdz["攻击"] = st.selectbox("攻击固定值",sp_gj_gdz_numbers20,index=sp_gj_gdz_numbers20.index(st.session_state.spfm_gdz["攻击"]),key="sp_gdz_02") # 饰品攻击固定值附魔
+                st.session_state.spfm_gdz["智力"] = st.selectbox("智力固定值",sp_zl_gdz_numbers20,index=sp_zl_gdz_numbers20.index(st.session_state.spfm_gdz["智力"]),key="sp_gdz_03") # 饰品智力固定值附魔
+                st.session_state.spfm_gdz["防御"] = st.selectbox("防御固定值",sp_fy_gdz_numbers12,index=sp_fy_gdz_numbers12.index(st.session_state.spfm_gdz["防御"]),key="sp_gdz_04") # 饰品防御固定值附魔
+                st.session_state.spfm_gdz["魔防"] = st.selectbox("魔防固定值",sp_mf_gdz_numbers12,index=sp_mf_gdz_numbers12.index(st.session_state.spfm_gdz["魔防"]),key="sp_gdz_05") # 饰品魔防固定值附魔
 
         #计算总附魔加成
         #百分比总附魔加成
@@ -602,14 +637,14 @@ if selection == "英雄面板模拟":
     st.session_state.jjjt["技巧"] = st.number_input("技巧-竞技精通", value=st.session_state.jjjt["技巧"])  # 技巧竞技精通
 
 elif selection == "士兵面板模拟":
-    st.write("### 英雄兵修区")
+    st.write("### 英雄兵修区（未开发）")
     sm_bx = st.number_input("生命-兵修", 0)  # 生命兵修
     gj_bx = st.number_input("攻击-兵修", 0)  # 攻击兵修
     fy_bx = st.number_input("防御-兵修", 0)  # 防御兵修
     mf_bx = st.number_input("魔防-兵修", 0)  # 魔防兵修
 
 elif selection == "神契设置":
-    st.write("### 神契区")
+    st.write("### 神契区（未开发）")
 
     # 选择神契
     sf_dx = st.selectbox("神契",("无神契", "索尔", "菲依雅", "海姆达尔", "巴德尔", "奥丁", "弗丽嘉", "提尔", "洛基", "维达"))
