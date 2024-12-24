@@ -48,7 +48,7 @@ def convert_percentage_to_float(percentage_str):
 st.title('梦幻模拟战-面板模拟计算器')
 
 # 定义侧边栏选项
-SIDEBAR_OPTIONS = ["英雄面板模拟", "士兵面板模拟", "神契设置"]
+SIDEBAR_OPTIONS = ["英雄面板模拟（白+绿）", "英雄战斗面板模拟","士兵面板模拟", "神契设置"]
 
 # 获取侧边栏选项并设置默认值
 selection = st.sidebar.radio("导航栏", SIDEBAR_OPTIONS, index=0, key="sidebar")
@@ -72,6 +72,11 @@ if 'tsfm_bfb' not in st.session_state:
     st.session_state.tsfm_bfb = {"生命":"0%","攻击":"0%","智力":"0%","防御":"0%","魔防":"0%"}  # 初始化头饰附魔百分比 字典
 if 'spfm_bfb' not in st.session_state:
     st.session_state.spfm_bfb = {"生命":"0%","攻击":"0%","智力":"0%","防御":"0%","魔防":"0%"}  # 初始化饰品附魔百分比 字典
+
+if 'gm_fm_1' not in st.session_state:
+    st.session_state.gm_fm_1 = "无"  # 初始化附魔第一套种类
+if 'gm_fm_2' not in st.session_state:
+    st.session_state.gm_fm_2 = "无"  # 初始化附魔第二套种类
 if 'gmfm_bfb' not in st.session_state:
     st.session_state.gmfm_bfb = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0}  # 初始化共鸣附魔百分比 字典
 if 'fm_bfb' not in st.session_state:
@@ -106,6 +111,48 @@ if 'sq_cxzz_sbgd' not in st.session_state:
     st.session_state.sq_cxzz_sbgd = {"士兵生命":"0","士兵攻击":"0","士兵防御":"0","士兵魔防":"0"}  # 过渡 字典 存用户选择的士兵加成百分比
 if 'sq_zjc' not in st.session_state:
     st.session_state.sq_zjc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0,"士兵生命":0,"士兵攻击":0,"士兵防御":0,"士兵魔防":0}  # 初始化神契总加成 字典
+
+if 'bjl' not in st.session_state:
+    st.session_state.bjl = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化白+绿 字典
+if 'zb_tx' not in st.session_state:
+    st.session_state.zb_tx = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化装备特效加成 字典
+if 'zb_tx_gd' not in st.session_state:
+    st.session_state.zb_tx_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化装备特效 过渡 加成 字典
+if 'cj_tx' not in st.session_state:
+    st.session_state.cjtx = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化超绝特效加成 字典
+if 'fm4_jc' not in st.session_state:
+    st.session_state.fm4jc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化附魔四件套加成 字典
+if 'qtzd_jc' not in st.session_state:
+    st.session_state.qtzd_jc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化其他战斗加成 字典
+if 'qtzd_jc_gd' not in st.session_state:
+    st.session_state.qtzd_jc_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化其他战斗 过渡 加成 字典
+if 'zd_zjc' not in st.session_state:
+    st.session_state.zd_zjc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化战斗总加成 字典
+if 'yx_zdmb' not in st.session_state:
+    st.session_state.yx_zdmb = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄战斗面板 字典
+
+if 'selected_hero' not in st.session_state:
+    st.session_state.selected_hero = "自定义英雄"  # 初始化英雄选择
+if 'zyjt_sfm' not in st.session_state:
+    st.session_state.zyjt_sfm = "默认满"  # 初始化职业精通 是否满
+if 'jjjt_sfm' not in st.session_state:
+    st.session_state.jjjt_sfm = "默认满"  # 初始化竞技精通精通 是否满
+if 'zw_xz' not in st.session_state:
+    st.session_state.zw_xz = "无"  # 初始化铸纹选择
+if 'jjc_pd' not in st.session_state:
+    st.session_state.jjc_pd = "是"  # 初始化是否竞技场选择
+if 'cj_pd' not in st.session_state:
+    st.session_state.cj_pd = "未开"  # 初始化是否开启超绝特效
+if 'yx_wq' not in st.session_state:
+    st.session_state.yx_wq = "无"  # 初始化装备武器选择
+if 'yx_yf' not in st.session_state:
+    st.session_state.yx_yf = "无"  # 初始化装备衣服选择
+if 'yx_ts' not in st.session_state:
+    st.session_state.yx_ts = "无"  # 初始化装备头饰选择
+if 'yx_sp' not in st.session_state:
+    st.session_state.yx_sp = "无"  # 初始化装备饰品选择
+if 'selected_sq' not in st.session_state:
+    st.session_state.selected_sq = "未携带"  # 初始化神契选择
 
 # 初始化附魔选取的列表
 wq_sm_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
@@ -157,8 +204,8 @@ sp_fy_gdz_numbers12 = list(range(0, 13))
 sp_mf_gdz_numbers12 = list(range(0, 13))
 
 # 根据选项显示不同的内容
-if selection == "英雄面板模拟":
-    st.write("### 英雄面板计算结果")
+if selection == "英雄面板模拟（白+绿）":
+    st.write("### 英雄面板计算结果（白 + 绿）")
     if st.button("点击刷新计算结果"):
         st.markdown(f"#### 生命: {st.session_state.bz["生命"]} <strong><span style='color:green;font-size:25px;'> + {st.session_state.lz["生命"]}</span></strong>",unsafe_allow_html=True)
         st.markdown(f"#### 攻击: {st.session_state.bz["攻击"]} <strong><span style='color:green;font-size:25px;'> + {st.session_state.lz["攻击"]}</span></strong>",unsafe_allow_html=True)
@@ -182,36 +229,59 @@ if selection == "英雄面板模拟":
 
     # 英雄选择
     hero_names = df1['英雄名'].unique()
-    selected_hero = st.selectbox("请选择英雄名", hero_names)
+    st.session_state.selected_hero = st.selectbox("请选择英雄名", hero_names,index=list(hero_names).index(st.session_state.selected_hero))
 
-    # 根据选中英雄，获取其所有职业
-    hero_jobs = df1[df1['英雄名'] == selected_hero]['职业名']
-    selected_job = st.selectbox("请选择职业", hero_jobs)
+    # 根据选中英雄，获取职业列表
+    hero_jobs = df1[df1['英雄名'] == st.session_state.selected_hero]['职业名'].tolist()
 
-    if selected_hero == "自定义英雄":
-        st.session_state.bz["生命"] = st.number_input("生命-白字", value=st.session_state.bz["生命"])  # 生命白字
-        st.session_state.bz["攻击"] = st.number_input("攻击-白字", value=st.session_state.bz["攻击"])  # 攻击白字
-        st.session_state.bz["智力"] = st.number_input("智力-白字", value=st.session_state.bz["智力"])  # 智力白字
-        st.session_state.bz["防御"] = st.number_input("防御-白字", value=st.session_state.bz["防御"])  # 防御白字
-        st.session_state.bz["魔防"] = st.number_input("魔防-白字", value=st.session_state.bz["魔防"])  # 魔防白字
-        st.session_state.bz["技巧"] = st.number_input("技巧-白字", value=st.session_state.bz["技巧"])  # 技巧白字
+    # 检查职业列表是否为空
+    if not hero_jobs:
+        st.warning("当前英雄没有对应的职业，请选择其他英雄")
+        st.session_state.selected_job = "无职业"
     else:
-        # 根据选择的英雄和职业，获取属性值
-        selected_row = df1[(df1['英雄名'] == selected_hero) & (df1['职业名'] == selected_job)].iloc[0]
-        st.session_state.bz = {
-            "生命": selected_row["生命"],
-            "攻击": selected_row["攻击"],
-            "智力": selected_row["智力"],
-            "防御": selected_row["防御"],
-            "魔防": selected_row["魔防"],
-            "技巧": selected_row["技巧"],
-        }
-        st.markdown(f"#### 生命: {st.session_state.bz["生命"]}")
-        st.markdown(f"#### 攻击: {st.session_state.bz["攻击"]}")
-        st.markdown(f"#### 智力: {st.session_state.bz["智力"]}")
-        st.markdown(f"#### 防御: {st.session_state.bz["防御"]}")
-        st.markdown(f"#### 魔防: {st.session_state.bz["魔防"]}")
-        st.markdown(f"#### 技巧: {st.session_state.bz["技巧"]}")
+        if 'selected_job' not in st.session_state or st.session_state.selected_job not in hero_jobs:
+            st.session_state.selected_job = hero_jobs[0]
+
+    # 职业选择框
+    if hero_jobs:
+        st.session_state.selected_job = st.selectbox(
+            "请选择职业",
+            hero_jobs,
+            index=hero_jobs.index(st.session_state.selected_job) if st.session_state.selected_job in hero_jobs else 0
+        )
+
+    column01, column02 = st.columns([0.5,1])
+    with column01:
+        # 显示英雄头像
+        selected_hero_row = df1[df1['英雄名'] == st.session_state.selected_hero].iloc[0]
+        hero_image_url = selected_hero_row['英雄头像']  # 获取头像链接列的值
+        # 调整头像大小
+        st.image(hero_image_url, caption=st.session_state.selected_hero, width=150)  # 设置宽度为150像素
+    with column02:
+        if st.session_state.selected_hero == "自定义英雄":
+            st.session_state.bz["生命"] = st.number_input("生命-白字", value=st.session_state.bz["生命"])  # 生命白字
+            st.session_state.bz["攻击"] = st.number_input("攻击-白字", value=st.session_state.bz["攻击"])  # 攻击白字
+            st.session_state.bz["智力"] = st.number_input("智力-白字", value=st.session_state.bz["智力"])  # 智力白字
+            st.session_state.bz["防御"] = st.number_input("防御-白字", value=st.session_state.bz["防御"])  # 防御白字
+            st.session_state.bz["魔防"] = st.number_input("魔防-白字", value=st.session_state.bz["魔防"])  # 魔防白字
+            st.session_state.bz["技巧"] = st.number_input("技巧-白字", value=st.session_state.bz["技巧"])  # 技巧白字
+        else:
+            # 根据选择的英雄和职业，获取属性值
+            selected_row = df1[(df1['英雄名'] == st.session_state.selected_hero) & (df1['职业名'] == st.session_state.selected_job)].iloc[0]
+            st.session_state.bz = {
+                "生命": selected_row["生命"],
+                "攻击": selected_row["攻击"],
+                "智力": selected_row["智力"],
+                "防御": selected_row["防御"],
+                "魔防": selected_row["魔防"],
+                "技巧": selected_row["技巧"],
+            }
+            st.markdown(f"#### 生命: {st.session_state.bz["生命"]}")
+            st.markdown(f"#### 攻击: {st.session_state.bz["攻击"]}")
+            st.markdown(f"#### 智力: {st.session_state.bz["智力"]}")
+            st.markdown(f"#### 防御: {st.session_state.bz["防御"]}")
+            st.markdown(f"#### 魔防: {st.session_state.bz["魔防"]}")
+            st.markdown(f"#### 技巧: {st.session_state.bz["技巧"]}")
 
     # 分割线
     st.divider()
@@ -236,22 +306,22 @@ if selection == "英雄面板模拟":
             sp_options = df2[df2["类别"] == "饰品"]["装备名称"].tolist()
 
             # 用户选择框
-            st.session_state.yx_wq = st.selectbox("请选择武器", wq_options)
+            st.session_state.yx_wq = st.selectbox("请选择武器", wq_options,index=list(wq_options).index(st.session_state.yx_wq))
             if st.session_state.yx_wq and st.session_state.yx_wq in zb_dict:
                 st.session_state.wq_jc = zb_dict[st.session_state.yx_wq]
                 st.markdown(f"武器代表:<span style='color:orange;font-size:16px;'> {zb_dict[st.session_state.yx_wq]['代表']}</span>",unsafe_allow_html=True)  # 显示武器的代表
 
-            st.session_state.yx_yf = st.selectbox("请选择衣服", yf_options)
+            st.session_state.yx_yf = st.selectbox("请选择衣服", yf_options,index=list(yf_options).index(st.session_state.yx_yf))
             if st.session_state.yx_yf and st.session_state.yx_yf in zb_dict:
                 st.session_state.yf_jc = zb_dict[st.session_state.yx_yf]
                 st.markdown(f"衣服代表:<span style='color:orange;font-size:16px;'>{zb_dict[st.session_state.yx_yf]['代表']}</span>",unsafe_allow_html=True)  # 显示衣服的代表
 
-            st.session_state.yx_ts = st.selectbox("请选择头饰", ts_options)
+            st.session_state.yx_ts = st.selectbox("请选择头饰", ts_options,index=list(ts_options).index(st.session_state.yx_ts))
             if st.session_state.yx_ts and st.session_state.yx_ts in zb_dict:
                 st.session_state.ts_jc = zb_dict[st.session_state.yx_ts]
                 st.markdown(f"头饰代表:<span style='color:orange;font-size:16px;'> {zb_dict[st.session_state.yx_ts]['代表']}</span>",unsafe_allow_html=True)  # 显示头饰的代表
 
-            st.session_state.yx_sp = st.selectbox("请选择饰品", sp_options)
+            st.session_state.yx_sp = st.selectbox("请选择饰品", sp_options,index=list(sp_options).index(st.session_state.yx_sp))
             if st.session_state.yx_sp and st.session_state.yx_sp in zb_dict:
                 st.session_state.sp_jc = zb_dict[st.session_state.yx_sp]
                 st.markdown(f"饰品代表:<span style='color:orange;font-size:16px;'> {zb_dict[st.session_state.yx_sp]['代表']}</span>",unsafe_allow_html=True)  # 显示饰品的代表
@@ -276,29 +346,29 @@ if selection == "英雄面板模拟":
     with tab2:
         column21,column211,column22,column221,column23 = st.columns([1,0.1,1,0.1,1])
         with column21:
-
-            gm_fm_1 = st.selectbox("第一个共鸣2件套", ("无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"))
-            gm_fm_2 = st.selectbox("第二个共鸣2件套", ("无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"))
+            options_fm = ["无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"]
+            st.session_state.gm_fm_1 = st.selectbox("第一个共鸣2件套",options_fm,index=options_fm.index(st.session_state.gm_fm_1))
+            st.session_state.gm_fm_2 = st.selectbox("第二个共鸣2件套",options_fm,index=options_fm.index(st.session_state.gm_fm_2))
 
             gm_fm_jc_1 = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0}
             gm_fm_jc_2 = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0}
 
-            if gm_fm_1 == "满月" or gm_fm_1 == "轻风" or gm_fm_1 == "时钟" or gm_fm_1 == "怒涛" or gm_fm_1 == "魔术":
+            if st.session_state.gm_fm_1 == "满月" or st.session_state.gm_fm_1 == "轻风" or st.session_state.gm_fm_1 == "时钟" or st.session_state.gm_fm_1 == "怒涛" or st.session_state.gm_fm_1 == "魔术":
                 gm_fm_jc_1["攻击"] = 0.05
                 gm_fm_jc_1["智力"] = 0.05
-            elif gm_fm_1 == "顽石" or gm_fm_1 == "水晶" or gm_fm_1 == "寒冰":
+            elif st.session_state.gm_fm_1 == "顽石" or st.session_state.gm_fm_1 == "水晶" or st.session_state.gm_fm_1 == "寒冰":
                 gm_fm_jc_1["防御"] = 0.05
                 gm_fm_jc_1["魔防"] = 0.05
-            elif gm_fm_1 == "大树" or gm_fm_1 == "荆棘" or gm_fm_1 == "钢铁":
+            elif st.session_state.gm_fm_1 == "大树" or st.session_state.gm_fm_1 == "荆棘" or st.session_state.gm_fm_1 == "钢铁":
                 gm_fm_jc_1["生命"] = 0.1
 
-            if gm_fm_2 == "满月" or gm_fm_2 == "轻风" or gm_fm_2 == "时钟" or gm_fm_2 == "怒涛" or gm_fm_2 == "魔术":
+            if st.session_state.gm_fm_2 == "满月" or st.session_state.gm_fm_2 == "轻风" or st.session_state.gm_fm_2 == "时钟" or st.session_state.gm_fm_2 == "怒涛" or st.session_state.gm_fm_2 == "魔术":
                 gm_fm_jc_2["攻击"] = 0.05
                 gm_fm_jc_2["智力"] = 0.05
-            elif gm_fm_2 == "顽石" or gm_fm_2 == "水晶" or gm_fm_2 == "寒冰":
+            elif st.session_state.gm_fm_2 == "顽石" or st.session_state.gm_fm_2 == "水晶" or st.session_state.gm_fm_2 == "寒冰":
                 gm_fm_jc_2["防御"] = 0.05
                 gm_fm_jc_2["魔防"] = 0.05
-            elif gm_fm_2 == "大树" or gm_fm_2 == "荆棘" or gm_fm_2 == "钢铁":
+            elif st.session_state.gm_fm_2 == "大树" or st.session_state.gm_fm_2 == "荆棘" or st.session_state.gm_fm_2 == "钢铁":
                 gm_fm_jc_2["生命"] = 0.1
 
             st.session_state.gmfm_bfb["生命"] = gm_fm_jc_1["生命"] + gm_fm_jc_2["生命"]
@@ -307,7 +377,7 @@ if selection == "英雄面板模拟":
             st.session_state.gmfm_bfb["防御"] = gm_fm_jc_1["防御"] + gm_fm_jc_2["防御"]
             st.session_state.gmfm_bfb["魔防"] = gm_fm_jc_1["魔防"] + gm_fm_jc_2["魔防"]
 
-            if gm_fm_1 == gm_fm_2:
+            if st.session_state.gm_fm_1 == st.session_state.gm_fm_2:
                 st.session_state.gmfm_bfb["生命"] = st.session_state.gmfm_bfb["生命"]/2
                 st.session_state.gmfm_bfb["攻击"] = st.session_state.gmfm_bfb["攻击"]/2
                 st.session_state.gmfm_bfb["智力"] = st.session_state.gmfm_bfb["智力"]/2
@@ -408,9 +478,10 @@ if selection == "英雄面板模拟":
     with tab3:
         column31,column32,column33 = st.columns([0.4,1,0.3])
         with column31:
-            zyjt_jfm = st.radio("职业精通是否满值", ("默认满", "自定义"))
+            options_zyjt_sfm = ["默认满", "自定义"]
+            st.session_state.zyjt_sfm = st.radio("职业精通是否满值",options_zyjt_sfm,index=options_zyjt_sfm.index(st.session_state.zyjt_sfm))
         with column32:
-            if zyjt_jfm == "默认满":
+            if st.session_state.zyjt_sfm == "默认满":
                 st.session_state.zyjt["生命"] = 750
                 st.session_state.zyjt["攻击"] = 80
                 st.session_state.zyjt["智力"] = 80
@@ -434,44 +505,45 @@ if selection == "英雄面板模拟":
     with tab4:
         column41, column42, column43 = st.columns([0.8, 1, 0.3])
         with column41:
-            zw_xz = st.radio("选择铸纹类型（默认满级）", ("无", "攻击英雄", "智力英雄", "双修英雄(火男、黑骑士)", "双修英雄(阿卡娅)","自定义铸纹"))
+            options_zw_xz = ["无", "攻击英雄", "智力英雄", "双修英雄(火男、黑骑士)", "双修英雄(阿卡娅)","自定义铸纹"]
+            st.session_state.zw_xz = st.radio("选择铸纹类型（默认满级）", options_zw_xz,index=options_zw_xz.index(st.session_state.zw_xz))
         with column42:
-            if zw_xz == "无":
+            if st.session_state.zw_xz == "无":
                 st.session_state.zw["生命"] = 0
                 st.session_state.zw["攻击"] = 0
                 st.session_state.zw["智力"] = 0
                 st.session_state.zw["防御"] = 0
                 st.session_state.zw["魔防"] = 0
                 st.session_state.zw["技巧"] = 0
-            elif zw_xz == "攻击英雄":
+            elif st.session_state.zw_xz == "攻击英雄":
                 st.session_state.zw["生命"] = 1000
                 st.session_state.zw["攻击"] = 150
                 st.session_state.zw["智力"] = 30
                 st.session_state.zw["防御"] = 90
                 st.session_state.zw["魔防"] = 90
                 st.session_state.zw["技巧"] = 20
-            elif zw_xz == "智力英雄":
+            elif st.session_state.zw_xz == "智力英雄":
                 st.session_state.zw["生命"] = 1000
                 st.session_state.zw["攻击"] = 30
                 st.session_state.zw["智力"] = 150
                 st.session_state.zw["防御"] = 90
                 st.session_state.zw["魔防"] = 90
                 st.session_state.zw["技巧"] = 20
-            elif zw_xz == "双修英雄(火男、黑骑士)":
+            elif st.session_state.zw_xz == "双修英雄(火男、黑骑士)":
                 st.session_state.zw["生命"] = 800
                 st.session_state.zw["攻击"] = 150
                 st.session_state.zw["智力"] = 110
                 st.session_state.zw["防御"] = 90
                 st.session_state.zw["魔防"] = 90
                 st.session_state.zw["技巧"] = 20
-            elif zw_xz == "双修英雄(阿卡娅)":
+            elif st.session_state.zw_xz == "双修英雄(阿卡娅)":
                 st.session_state.zw["生命"] = 800
                 st.session_state.zw["攻击"] = 110
                 st.session_state.zw["智力"] = 150
                 st.session_state.zw["防御"] = 90
                 st.session_state.zw["魔防"] = 90
                 st.session_state.zw["技巧"] = 20
-            elif zw_xz == "自定义铸纹":
+            elif st.session_state.zw_xz == "自定义铸纹":
                 st.session_state.zw["生命"] = st.number_input("生命-铸纹加成", value=st.session_state.zw["生命"])  # 生命铸纹绿字
                 st.session_state.zw["攻击"] = st.number_input("攻击-铸纹加成", value=st.session_state.zw["攻击"])  # 攻击铸纹绿字
                 st.session_state.zw["智力"] = st.number_input("智力-铸纹加成", value=st.session_state.zw["智力"])  # 智力铸纹绿字
@@ -479,7 +551,7 @@ if selection == "英雄面板模拟":
                 st.session_state.zw["魔防"] = st.number_input("魔防-铸纹加成", value=st.session_state.zw["魔防"])  # 魔防铸纹绿字
                 st.session_state.zw["技巧"] = st.number_input("技巧-铸纹加成", value=st.session_state.zw["技巧"])  # 技巧铸纹绿字
 
-            if zw_xz != "自定义铸纹":
+            if st.session_state.zw_xz != "自定义铸纹":
                 st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> + {st.session_state.zw["生命"]}</span></strong>",unsafe_allow_html=True)
                 st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> + {st.session_state.zw["攻击"]}</span></strong>",unsafe_allow_html=True)
                 st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> + {st.session_state.zw["智力"]}</span></strong>",unsafe_allow_html=True)
@@ -502,7 +574,7 @@ if selection == "英雄面板模拟":
             "维达": {"生命": 400, "攻击": 69, "智力": 21, "防御": 14, "魔防": 44, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06}
         }
         # 用户选择框
-        st.session_state.selected_sq = st.selectbox("请选择神契", list(sq_slsb_dict.keys()))
+        st.session_state.selected_sq = st.selectbox("请选择神契", list(sq_slsb_dict.keys()),index=list(sq_slsb_dict.keys()).index(st.session_state.selected_sq))
         # 更新 神契神力石板加成
         if st.session_state.selected_sq and st.session_state.selected_sq in sq_slsb_dict:
             st.session_state.sq_slsb = sq_slsb_dict[st.session_state.selected_sq]
@@ -627,14 +699,288 @@ if selection == "英雄面板模拟":
 
     # 分割线
     st.divider()
-
     st.write("### 英雄竞技精通区")
-    st.session_state.jjjt["生命"] = st.number_input("生命-竞技精通", value=st.session_state.jjjt["生命"])  # 生命竞技精通
-    st.session_state.jjjt["攻击"] = st.number_input("攻击-竞技精通", value=st.session_state.jjjt["攻击"])  # 攻击竞技精通
-    st.session_state.jjjt["智力"] = st.number_input("智力-竞技精通", value=st.session_state.jjjt["智力"])  # 智力竞技精通
-    st.session_state.jjjt["防御"] = st.number_input("防御-竞技精通", value=st.session_state.jjjt["防御"])  # 防御竞技精通
-    st.session_state.jjjt["魔防"] = st.number_input("魔防-竞技精通", value=st.session_state.jjjt["魔防"])  # 魔防竞技精通
-    st.session_state.jjjt["技巧"] = st.number_input("技巧-竞技精通", value=st.session_state.jjjt["技巧"])  # 技巧竞技精通
+    column71, column72, column73 = st.columns([0.5, 1, 0.3])
+    with column71:
+        options_jjjt_sfm = ["默认满", "自定义"]
+        st.session_state.jjjt_sfm = st.radio("竞技精通是否满值",options_jjjt_sfm,index=options_jjjt_sfm.index(st.session_state.jjjt_sfm))
+    with column72:
+        if st.session_state.jjjt_sfm == "默认满":
+            st.session_state.jjjt["生命"] = 500
+            st.session_state.jjjt["攻击"] = 60
+            st.session_state.jjjt["智力"] = 60
+            st.session_state.jjjt["防御"] = 50
+            st.session_state.jjjt["魔防"] = 50
+            st.session_state.jjjt["技巧"] = 80
+            st.markdown(f"#### 生命: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["生命"]}</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 攻击: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["攻击"]}</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["智力"]}</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["防御"]}</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["魔防"]}</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 技巧: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["技巧"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.session_state.zyjt["生命"] = st.number_input("生命-竞技精通", value=st.session_state.jjjt["生命"])  # 生命竞技精通
+            st.session_state.zyjt["攻击"] = st.number_input("攻击-竞技精通", value=st.session_state.jjjt["攻击"])  # 攻击竞技精通
+            st.session_state.zyjt["智力"] = st.number_input("智力-竞技精通", value=st.session_state.jjjt["智力"])  # 智力竞技精通
+            st.session_state.zyjt["防御"] = st.number_input("防御-竞技精通", value=st.session_state.jjjt["防御"])  # 防御竞技精通
+            st.session_state.zyjt["魔防"] = st.number_input("魔防-竞技精通", value=st.session_state.jjjt["魔防"])  # 魔防竞技精通
+            st.session_state.zyjt["技巧"] = st.number_input("技巧-竞技精通", value=st.session_state.jjjt["技巧"])  # 技巧竞技精通
+
+elif selection == "英雄战斗面板模拟":
+    st.write("### 英雄战斗面板模拟")
+
+    # 分割线
+    st.divider()
+
+    column74, column75 = st.columns([1, 1])
+    with column74:
+        #计算英雄的白+绿
+        st.session_state.bjl["生命"] = st.session_state.bz["生命"] + st.session_state.lz["生命"]
+        st.session_state.bjl["攻击"] = st.session_state.bz["攻击"] + st.session_state.lz["攻击"]
+        st.session_state.bjl["智力"] = st.session_state.bz["智力"] + st.session_state.lz["智力"]
+        st.session_state.bjl["防御"] = st.session_state.bz["防御"] + st.session_state.lz["防御"]
+        st.session_state.bjl["魔防"] = st.session_state.bz["魔防"] + st.session_state.lz["魔防"]
+        st.session_state.bjl["技巧"] = st.session_state.bz["技巧"] + st.session_state.lz["技巧"]
+
+        st.write("### 英雄的白+绿面板")
+        st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> {st.session_state.bjl["生命"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> {st.session_state.bjl["攻击"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> {st.session_state.bjl["智力"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> {st.session_state.bjl["防御"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> {st.session_state.bjl["魔防"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> {st.session_state.bjl["技巧"]}</span></strong>",unsafe_allow_html=True)
+
+    with column75:
+        st.write("### 英雄的竞技精通加成")
+        st.markdown(f"#### 生命: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["生命"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 攻击: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["攻击"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 智力: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["智力"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 防御: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["防御"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 魔防: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["魔防"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='color:orange;font-size:25px;'> + {st.session_state.jjjt["技巧"]}</span></strong>",unsafe_allow_html=True)
+
+    # 分割线
+    st.divider()
+
+    options_jjc_pd = ["是", "否"]
+    st.session_state.jjc_pd = st.radio("是否竞技场", options_jjc_pd,index=options_jjc_pd.index(st.session_state.jjc_pd))
+
+    column81, column82, column83, column84, column85 = st.columns([0.7, 0.9, 0.9, 1, 1])
+
+    with column81:
+        st.session_state.zb_tx_gd["生命"] = st.text_input("装备特效生命%", value=st.session_state.zb_tx_gd["生命"])  # 装备特效生命加成百分比
+        st.session_state.zb_tx["生命"] = bfb_shuru(st.session_state.zb_tx_gd["生命"])
+        st.session_state.zb_tx_gd["攻击"] = st.text_input("装备特效攻击%", value=st.session_state.zb_tx_gd["攻击"])  # 装备特效攻击加成百分比
+        st.session_state.zb_tx["攻击"] = bfb_shuru(st.session_state.zb_tx_gd["攻击"])
+        st.session_state.zb_tx_gd["智力"] = st.text_input("装备特效智力%", value=st.session_state.zb_tx_gd["智力"])  # 装备特效智力加成百分比
+        st.session_state.zb_tx["智力"] = bfb_shuru(st.session_state.zb_tx_gd["智力"])
+        st.session_state.zb_tx_gd["防御"] = st.text_input("装备特效防御%", value=st.session_state.zb_tx_gd["防御"])  # 装备特效防御加成百分比
+        st.session_state.zb_tx["防御"] = bfb_shuru(st.session_state.zb_tx_gd["防御"])
+        st.session_state.zb_tx_gd["魔防"] = st.text_input("装备特效魔防%", value=st.session_state.zb_tx_gd["魔防"])  # 装备特效魔防加成百分比
+        st.session_state.zb_tx["魔防"] = bfb_shuru(st.session_state.zb_tx_gd["魔防"])
+        st.session_state.zb_tx_gd["技巧"] = st.text_input("装备特效技巧%", value=st.session_state.zb_tx_gd["技巧"])  # 装备特效技巧加成百分比
+        st.session_state.zb_tx["技巧"] = bfb_shuru(st.session_state.zb_tx_gd["技巧"])
+
+    with column82:
+        options_cj_pd = ["未开", "开"]
+        st.session_state.cj_pd = st.radio("是否开启超绝特效", options_cj_pd,index=options_cj_pd.index(st.session_state.cj_pd))
+        if st.session_state.cj_pd == "未开":
+            st.session_state.cjtx["攻击"] = 0
+            st.session_state.cjtx["智力"] = 0
+            st.session_state.cjtx["防御"] = 0
+            st.session_state.cjtx["魔防"] = 0
+        else:
+            st.session_state.cjtx["攻击"] = 0.2
+            st.session_state.cjtx["智力"] = 0.2
+            st.session_state.cjtx["防御"] = 0.2
+            st.session_state.cjtx["魔防"] = 0.3
+        st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["生命"]*100)}%</span></strong>",unsafe_allow_html=True)
+        if st.session_state.cj_pd == "未开":
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.cjtx["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.cjtx["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.cjtx["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.cjtx["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(st.session_state.cjtx["技巧"]*100)}%</span></strong>",unsafe_allow_html=True)
+
+    with column83:
+        if st.session_state.gm_fm_1 == "满月" and st.session_state.gm_fm_2 == "满月":
+            st.write("#### 附魔：满月")
+            st.session_state.fm4jc["攻击"] = 0.1
+            st.session_state.fm4jc["智力"] = 0.1
+            st.session_state.fm4jc["防御"] = 0.1
+            st.session_state.fm4jc["魔防"] = 0.1
+        elif st.session_state.gm_fm_1 == "怒涛" and st.session_state.gm_fm_2 == "怒涛":
+            st.write("#### 附魔：怒涛")
+            st.session_state.fm4jc["攻击"] = 0.1
+        elif st.session_state.gm_fm_1 == "大树" and st.session_state.gm_fm_2 == "大树":
+            st.write("#### 附魔：大树")
+            st.session_state.fm4jc["防御"] = 0.05
+            st.session_state.fm4jc["魔防"] = 0.05
+        else:
+            st.write("#### 附魔无加成")
+            st.session_state.fm4jc["生命"] = 0
+            st.session_state.fm4jc["攻击"] = 0
+            st.session_state.fm4jc["智力"] = 0
+            st.session_state.fm4jc["防御"] = 0
+            st.session_state.fm4jc["魔防"] = 0
+            st.session_state.fm4jc["技巧"] = 0
+
+        st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["生命"]*100)}%</span></strong>",unsafe_allow_html=True)
+        if  st.session_state.gm_fm_1 == "满月" and st.session_state.gm_fm_2 == "满月":
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
+        elif st.session_state.gm_fm_1 == "怒涛" and st.session_state.gm_fm_2 == "怒涛":
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
+        elif st.session_state.gm_fm_1 == "大树" and st.session_state.gm_fm_2 == "大树":
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(st.session_state.fm4jc["技巧"]*100)}%</span></strong>",unsafe_allow_html=True)
+
+    with column84:
+        st.write("#### 战场其他加成")
+        st.session_state.qtzd_jc_gd["生命"] = st.text_input("战场其他加成生命%", value=st.session_state.qtzd_jc_gd["生命"])  # 战斗其他加成生命百分比
+        st.session_state.qtzd_jc["生命"] = bfb_shuru(st.session_state.qtzd_jc_gd["生命"])
+        st.session_state.qtzd_jc_gd["攻击"] = st.text_input("战场其他加成攻击%", value=st.session_state.qtzd_jc_gd["攻击"])  # 战斗其他加成攻击百分比
+        st.session_state.qtzd_jc["攻击"] = bfb_shuru(st.session_state.qtzd_jc_gd["攻击"])
+        st.session_state.qtzd_jc_gd["智力"] = st.text_input("战场其他加成智力%", value=st.session_state.qtzd_jc_gd["智力"])  # 战斗其他加成智力百分比
+        st.session_state.qtzd_jc["智力"] = bfb_shuru(st.session_state.qtzd_jc_gd["智力"])
+        st.session_state.qtzd_jc_gd["防御"] = st.text_input("战场其他加成防御%", value=st.session_state.qtzd_jc_gd["防御"])  # 战斗其他加成防御百分比
+        st.session_state.qtzd_jc["防御"] = bfb_shuru(st.session_state.qtzd_jc_gd["防御"])
+        st.session_state.qtzd_jc_gd["魔防"] = st.text_input("战场其他加成魔防%", value=st.session_state.qtzd_jc_gd["魔防"])  # 战斗其他加成魔防百分比
+        st.session_state.qtzd_jc["魔防"] = bfb_shuru(st.session_state.qtzd_jc_gd["魔防"])
+        st.session_state.qtzd_jc_gd["技巧"] = st.text_input("战场其他加成技巧%", value=st.session_state.qtzd_jc_gd["技巧"])  # 战斗其他加成技巧百分比
+        st.session_state.qtzd_jc["技巧"] = bfb_shuru(st.session_state.qtzd_jc_gd["技巧"])
+
+    with column85:
+        if st.session_state.jjc_pd == "是":
+            st.session_state.zd_zjc["生命"] = round(st.session_state.zb_tx["生命"] + st.session_state.cjtx["生命"] + st.session_state.fm4jc["生命"] + st.session_state.qtzd_jc["生命"] + 0.4,1)
+        else:
+            st.session_state.zd_zjc["生命"] = st.session_state.zb_tx["生命"] + st.session_state.cjtx["生命"] + st.session_state.fm4jc["生命"] + st.session_state.qtzd_jc["生命"]
+        st.session_state.zd_zjc["攻击"] = st.session_state.zb_tx["攻击"] + st.session_state.cjtx["攻击"] + st.session_state.fm4jc["攻击"] + st.session_state.qtzd_jc["攻击"]
+        st.session_state.zd_zjc["智力"] = st.session_state.zb_tx["智力"] + st.session_state.cjtx["智力"] + st.session_state.fm4jc["智力"] + st.session_state.qtzd_jc["智力"]
+        st.session_state.zd_zjc["防御"] = st.session_state.zb_tx["防御"] + st.session_state.cjtx["防御"] + st.session_state.fm4jc["防御"] + st.session_state.qtzd_jc["防御"]
+        st.session_state.zd_zjc["魔防"] = st.session_state.zb_tx["魔防"] + st.session_state.cjtx["魔防"] + st.session_state.fm4jc["魔防"] + st.session_state.qtzd_jc["魔防"]
+        st.session_state.zd_zjc["技巧"] = st.session_state.zb_tx["技巧"] + st.session_state.cjtx["技巧"] + st.session_state.fm4jc["技巧"] + st.session_state.qtzd_jc["技巧"]
+
+        st.write("### 总加成")
+        if st.session_state.zd_zjc["生命"] > 0:
+            st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["生命"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["生命"] < 0:
+            st.markdown(f"#### 生命: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["生命"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["生命"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+        if st.session_state.zd_zjc["攻击"] > 0:
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["攻击"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["攻击"] < 0:
+            st.markdown(f"#### 攻击: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["攻击"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["攻击"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+        if st.session_state.zd_zjc["智力"] > 0:
+            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["智力"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["智力"] < 0:
+            st.markdown(f"#### 智力: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["智力"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["智力"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+        if st.session_state.zd_zjc["防御"] > 0:
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["防御"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["防御"] < 0:
+            st.markdown(f"#### 防御: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["防御"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["防御"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+        if st.session_state.zd_zjc["魔防"] > 0:
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["魔防"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["魔防"] < 0:
+            st.markdown(f"#### 魔防: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["魔防"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["魔防"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+        if st.session_state.zd_zjc["技巧"] > 0:
+            st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> +{round(st.session_state.zd_zjc["技巧"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["技巧"] < 0:
+            st.markdown(f"#### 技巧: <strong><span style='color:red;font-size:25px;'> {round(st.session_state.zd_zjc["技巧"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(st.session_state.zd_zjc["技巧"]*100,1)}%</span></strong>",unsafe_allow_html=True)
+
+    # 分割线
+    st.divider()
+    if st.session_state.jjc_pd == "是":
+        st.session_state.yx_zdmb["生命"] = round(st.session_state.bjl["生命"]*(1+st.session_state.zd_zjc["生命"]) + st.session_state.jjjt["生命"],1)
+        st.session_state.yx_zdmb["攻击"] = round(st.session_state.bjl["攻击"]*(1+st.session_state.zd_zjc["攻击"]) + st.session_state.jjjt["攻击"],1)
+        st.session_state.yx_zdmb["智力"] = round(st.session_state.bjl["智力"]*(1+st.session_state.zd_zjc["智力"]) + st.session_state.jjjt["智力"],1)
+        st.session_state.yx_zdmb["防御"] = round(st.session_state.bjl["防御"]*(1+st.session_state.zd_zjc["防御"]) + st.session_state.jjjt["防御"],1)
+        st.session_state.yx_zdmb["魔防"] = round(st.session_state.bjl["魔防"]*(1+st.session_state.zd_zjc["魔防"]) + st.session_state.jjjt["魔防"],1)
+        st.session_state.yx_zdmb["技巧"] = round(st.session_state.bjl["技巧"]*(1+st.session_state.zd_zjc["技巧"]) + st.session_state.jjjt["技巧"],1)
+    else:
+        st.session_state.yx_zdmb["生命"] = round(st.session_state.bjl["生命"]*(1+st.session_state.zd_zjc["生命"]),1)
+        st.session_state.yx_zdmb["攻击"] = round(st.session_state.bjl["攻击"]*(1+st.session_state.zd_zjc["攻击"]),1)
+        st.session_state.yx_zdmb["智力"] = round(st.session_state.bjl["智力"]*(1+st.session_state.zd_zjc["智力"]),1)
+        st.session_state.yx_zdmb["防御"] = round(st.session_state.bjl["防御"]*(1+st.session_state.zd_zjc["防御"]),1)
+        st.session_state.yx_zdmb["魔防"] = round(st.session_state.bjl["魔防"]*(1+st.session_state.zd_zjc["魔防"]),1)
+        st.session_state.yx_zdmb["技巧"] = round(st.session_state.bjl["技巧"]*(1+st.session_state.zd_zjc["技巧"]),1)
+
+    st.write("### 英雄的战场面板")
+
+    column91, column92, column93= st.columns([1, 1, 1])
+    with column91:
+        if st.session_state.zd_zjc["生命"] > 0:
+            st.markdown(f"### 生命: <strong><span style='color:green;font-size:35px;'> {st.session_state.yx_zdmb["生命"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["生命"] < 0:
+            st.markdown(f"### 生命: <strong><span style='color:red;font-size:35px;'> {st.session_state.yx_zdmb["生命"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"### 生命: <strong><span style='font-size:35px;'> {st.session_state.yx_zdmb["生命"]}</span></strong>",unsafe_allow_html=True)
+    with column92:
+        if st.session_state.zd_zjc["攻击"] > 0:
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> {st.session_state.yx_zdmb["攻击"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["攻击"] < 0:
+            st.markdown(f"#### 攻击: <strong><span style='color:red;font-size:25px;'> {st.session_state.yx_zdmb["攻击"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> {st.session_state.yx_zdmb["攻击"]}</span></strong>",unsafe_allow_html=True)
+        if st.session_state.zd_zjc["防御"] > 0:
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> {st.session_state.yx_zdmb["防御"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["防御"] < 0:
+            st.markdown(f"#### 防御: <strong><span style='color:red;font-size:25px;'> {st.session_state.yx_zdmb["防御"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> {st.session_state.yx_zdmb["防御"]}</span></strong>",unsafe_allow_html=True)
+        if st.session_state.zd_zjc["技巧"] > 0:
+            st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> {st.session_state.yx_zdmb["技巧"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["技巧"] < 0:
+            st.markdown(f"#### 技巧: <strong><span style='color:red;font-size:25px;'> {st.session_state.yx_zdmb["技巧"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> {st.session_state.yx_zdmb["技巧"]}</span></strong>",unsafe_allow_html=True)
+    with column93:
+        if st.session_state.zd_zjc["智力"] > 0:
+            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> {st.session_state.yx_zdmb["智力"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["智力"] < 0:
+            st.markdown(f"#### 智力: <strong><span style='color:red;font-size:25px;'> {st.session_state.yx_zdmb["智力"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> {st.session_state.yx_zdmb["智力"]}</span></strong>",unsafe_allow_html=True)
+        if st.session_state.zd_zjc["魔防"] > 0:
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> {st.session_state.yx_zdmb["魔防"]}</span></strong>",unsafe_allow_html=True)
+        elif st.session_state.zd_zjc["魔防"] < 0:
+            st.markdown(f"#### 魔防: <strong><span style='color:red;font-size:25px;'> {st.session_state.yx_zdmb["魔防"]}</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> {st.session_state.yx_zdmb["魔防"]}</span></strong>",unsafe_allow_html=True)
 
 elif selection == "士兵面板模拟":
     st.write("### 英雄兵修区（未开发）")
