@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import re
-import io
 
 #定义面板输入函数
 def mb_shuru(shuxing):
@@ -245,23 +244,6 @@ with st.expander("点击打开进行神契设置"):
     # 初始化结果字典
     result_dict = {}
 
-    #初始化 DataFrame 用于保存数据到csv
-    sq_cxzz_dict = {
-        "生命": [0],
-        "攻击": [0],
-        "智力": [0],
-        "防御": [0],
-        "魔防": [0],
-        "技巧": [0],
-        "士兵生命": [0],
-        "士兵攻击": [0],
-        "士兵防御": [0],
-        "士兵魔防": [0]
-    }
-
-    # 创建一个 DataFrame 存储数据
-    df_cxzz_dict = pd.DataFrame(sq_cxzz_dict)
-
     st.write("### 神契晨曦之祝加成")
     # 神契晨曦之祝加成
     column1521, column15213, column1522 = st.columns([1,0.2,1])
@@ -281,34 +263,6 @@ with st.expander("点击打开进行神契设置"):
     with column1524:
         sq_cxzz["士兵防御"] = bfb_shuru(st.text_input("士兵防御%（最大值18%）", value="0")) # 士兵防御晨曦加成百分比
         sq_cxzz["士兵魔防"] = bfb_shuru(st.text_input("士兵魔防%（最大值18%）", value="0"))  # 士兵魔防晨曦加成百分比
-
-    # 下载数据为 CSV 文件按钮
-    # 定义导出为 Excel 文件的函数
-    def download_excel(df):
-        # 使用 BytesIO 创建一个字节流
-        output = io.BytesIO()
-        # 使用 pandas 的 ExcelWriter，将 DataFrame 写入 Excel 格式
-        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
-            df.to_excel(writer, index=False, sheet_name="数据")
-        processed_data = output.getvalue()  # 获取字节流内容
-        return processed_data
-
-
-    # 用户点击保存按钮后下载 Excel 文件
-    if st.button("点击保存后，即将下载数据为Excel文件"):
-        # 将 sq_cxzz 转换为 DataFrame
-        df_cxzz_dict = pd.DataFrame([sq_cxzz])
-
-        # 生成 Excel 文件字节流
-        excel_data = download_excel(df_cxzz_dict)
-
-        # 创建下载按钮
-        st.download_button(
-            label="点击下载 Excel 文件",
-            data=excel_data,
-            file_name="神契晨曦之祝数据保存.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
 
     # 为每个神契计算总加成
     for sq_name, sq_slsb in sq_slsb_dict.items():
