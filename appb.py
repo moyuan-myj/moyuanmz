@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import re
+import io
 
 #定义面板输入函数
 def mb_shuru(shuxing):
@@ -100,18 +101,6 @@ yx_zl_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧"
 yx_fy_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄防御转化系数 过渡 字典
 yx_mf_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄魔防转化系数 过渡 字典
 yx_jq_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄技巧转化系数 过渡 字典
-zh_pd = "增加到某属性"  # 初始化属性转化判断
-selected_hero = "自定义英雄"  # 初始化英雄选择
-zyjt_sfm = "默认满"  # 初始化职业精通 是否满
-jjjt_sfm = "默认满"  # 初始化竞技精通精通 是否满
-zw_xz = "无"  # 初始化铸纹选择
-jjc_pd = "是"  # 初始化是否竞技场选择
-cj_pd = "未开"  # 初始化是否开启超绝特效
-yx_wq = "无"  # 初始化装备武器选择
-yx_yf = "无"  # 初始化装备衣服选择
-yx_ts = "无"  # 初始化装备头饰选择
-yx_sp = "无"  # 初始化装备饰品选择
-selected_sq = "未携带"  # 初始化神契选择
 
 # 初始化附魔选取的列表
 wq_sm_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
@@ -221,6 +210,150 @@ with column02:
 
 # 分割线
 st.divider()
+st.write("### 神契设置区")
+
+with st.expander("点击打开进行神契设置"):
+
+    # 神契神力石板加成 字典
+    sq_slsb_dict = {
+        "索尔": {"生命": 360, "攻击": 45, "智力": 45, "防御": 30, "魔防": 30, "技巧": 10, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "菲依雅": {"生命": 180, "攻击": 18, "智力": 75, "防御": 28, "魔防": 50, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "海姆达尔": {"生命": 500, "攻击": 24, "智力": 18, "防御": 82, "魔防": 6, "技巧": 5, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "巴德尔": {"生命": 380, "攻击": 21, "智力": 72, "防御": 46, "魔防": 12, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "奥丁": {"生命": 300, "攻击": 93, "智力": 12, "防御": 36, "魔防": 10, "技巧": 15, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "弗丽嘉": {"生命": 420, "攻击": 18, "智力": 27, "防御": 8, "魔防": 86, "技巧": 5, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "提尔": {"生命": 460, "攻击": 96, "智力": 18, "防御": 28, "魔防": 10, "技巧": 8, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "洛基": {"生命": 400, "攻击": 12, "智力": 120, "防御": 10, "魔防": 18, "技巧": 10, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
+        "维达": {"生命": 400, "攻击": 69, "智力": 21, "防御": 14, "魔防": 44, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06}
+    }
+
+    # 初始化神契的图片
+    sq_tp = {"索尔":"./image/索尔.png","菲依雅":"./image/菲依雅.png","海姆达尔":"./image/海姆达尔.png","巴德尔":"./image/巴德尔.png","奥丁":"./image/奥丁.png","弗丽嘉":"./image/弗丽嘉.png","提尔":"./image/提尔.png","洛基":"./image/洛基.png","维达":"./image/维达.png","未携带":"./image/神契未携带.png"}
+
+    st.write("### 神契神力石板加成")
+
+    # 将神契神力石板加成以表格展示
+    df_slsb = pd.DataFrame(sq_slsb_dict).T  # 转置：行是神契，列是属性
+
+    # 将士兵的属性值乘以 100 并添加 '%' 符号
+    soldier_columns = ["士兵生命", "士兵攻击", "士兵防御", "士兵魔防"]
+    df_slsb[soldier_columns] = df_slsb[soldier_columns].applymap(lambda x: f"{x * 100:.0f}%")
+
+    # 显示表格
+    st.dataframe(df_slsb)
+
+    # 初始化结果字典
+    result_dict = {}
+
+    #初始化 DataFrame 用于保存数据到csv
+    sq_cxzz_dict = {
+        "生命": [0],
+        "攻击": [0],
+        "智力": [0],
+        "防御": [0],
+        "魔防": [0],
+        "技巧": [0],
+        "士兵生命": [0],
+        "士兵攻击": [0],
+        "士兵防御": [0],
+        "士兵魔防": [0]
+    }
+
+    # 创建一个 DataFrame 存储数据
+    df_cxzz_dict = pd.DataFrame(sq_cxzz_dict)
+
+    st.write("### 神契晨曦之祝加成")
+    # 神契晨曦之祝加成
+    column1521, column15213, column1522 = st.columns([1,0.2,1])
+    with column1521:
+        sq_cxzz["生命"] = st.number_input("生命（最大值600）", value=0)  # 生命晨曦绿字
+        sq_cxzz["攻击"] = st.number_input("攻击（最大值75）", value=0)  # 攻击晨曦绿字
+        sq_cxzz["智力"] = st.number_input("智力（最大值75）", value=0)  # 智力晨曦绿字
+    with column1522:
+        sq_cxzz["防御"] = st.number_input("防御（最大值60）", value=0)  # 防御晨曦绿字
+        sq_cxzz["魔防"] = st.number_input("魔防（最大值60）", value=0)  # 魔防晨曦绿字
+        sq_cxzz["技巧"] = st.number_input("技巧（最大值0）", value=0)  # 技巧晨曦绿字
+    st.write("")
+    column1523, column15223, column1524 = st.columns([1,0.2,1])
+    with column1523:
+        sq_cxzz["士兵生命"] = bfb_shuru(st.text_input("士兵生命%（最大值18%）", value="0"))  # 士兵生命晨曦加成百分比
+        sq_cxzz["士兵攻击"] = bfb_shuru(st.text_input("士兵攻击%（最大值18%）", value="0")) # 士兵攻击晨曦加成百分比
+    with column1524:
+        sq_cxzz["士兵防御"] = bfb_shuru(st.text_input("士兵防御%（最大值18%）", value="0")) # 士兵防御晨曦加成百分比
+        sq_cxzz["士兵魔防"] = bfb_shuru(st.text_input("士兵魔防%（最大值18%）", value="0"))  # 士兵魔防晨曦加成百分比
+
+    # 下载数据为 CSV 文件按钮
+    # 定义导出为 Excel 文件的函数
+    def download_excel(df):
+        # 使用 BytesIO 创建一个字节流
+        output = io.BytesIO()
+        # 使用 pandas 的 ExcelWriter，将 DataFrame 写入 Excel 格式
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, index=False, sheet_name="数据")
+        processed_data = output.getvalue()  # 获取字节流内容
+        return processed_data
+
+
+    # 用户点击保存按钮后下载 Excel 文件
+    if st.button("点击保存后，即将下载数据为Excel文件"):
+        # 将 sq_cxzz 转换为 DataFrame
+        df_cxzz_dict = pd.DataFrame([sq_cxzz])
+
+        # 生成 Excel 文件字节流
+        excel_data = download_excel(df_cxzz_dict)
+
+        # 创建下载按钮
+        st.download_button(
+            label="点击下载 Excel 文件",
+            data=excel_data,
+            file_name="神契晨曦之祝数据保存.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    # 为每个神契计算总加成
+    for sq_name, sq_slsb in sq_slsb_dict.items():
+        # 计算每个神契的总加成
+        sq_total = {}
+        for key in sq_slsb:
+            # 进行加成：神力石板加成 + 晨曦之祝加成
+            if key in sq_cxzz:
+                sq_total[key] = sq_slsb[key] + sq_cxzz[key]  # 加上晨曦之祝的加成
+            else:
+                sq_total[key] = sq_slsb[key]  # 如果没有晨曦之祝加成，保持原值
+
+        # 将计算结果存入字典
+        result_dict[sq_name] = sq_total
+
+    st.write("### 神契总加成")
+    tabs = st.tabs(list(sq_slsb_dict.keys()))  # 创建tabs
+
+    # 遍历每个tab，展示神契的总加成
+    for tab, sq_name in zip(tabs, sq_slsb_dict.keys()):
+        with tab:
+            sq_total = result_dict[sq_name]  # 获取该神契的总加成
+            sq_image_url = sq_tp[sq_name]  # 获取头像链接列的值
+            # 调整头像大小
+            st.image(sq_image_url, width=120)  # 设置宽度为120像素
+
+            column153, column154 = st.columns([1, 1])
+            with column153:
+                st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> + {sq_total['生命']}</span></strong>", unsafe_allow_html=True)
+                st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> + {sq_total['攻击']}</span></strong>", unsafe_allow_html=True)
+                st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> + {sq_total['智力']}</span></strong>", unsafe_allow_html=True)
+            with column154:
+                st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> + {sq_total['防御']}</span></strong>", unsafe_allow_html=True)
+                st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> + {sq_total['魔防']}</span></strong>", unsafe_allow_html=True)
+                st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {sq_total['技巧']}</span></strong>", unsafe_allow_html=True)
+            column155, column156 = st.columns([1, 1])
+            with column155:
+                st.markdown(f"#### 士兵生命: <strong><span style='color:green;font-size:25px;'> + {sq_total["士兵生命"]*100}% </span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 士兵攻击: <strong><span style='color:green;font-size:25px;'> + {sq_total["士兵攻击"]*100}% </span></strong>",unsafe_allow_html=True)
+            with column156:
+                st.markdown(f"#### 士兵防御: <strong><span style='color:green;font-size:25px;'> + {sq_total["士兵防御"]*100}% </span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 士兵魔防: <strong><span style='color:green;font-size:25px;'> + {sq_total["士兵魔防"]*100}% </span></strong>",unsafe_allow_html=True)
+
+# 分割线
+st.divider()
 
 st.write("### 英雄绿字区")
 
@@ -283,8 +416,32 @@ with tab2:
     column21,column211,column22,column221,column23 = st.columns([1,0.1,1,0.1,1])
     with column21:
         options_fm = ["无","满月","轻风","时钟","怒涛","魔术","顽石","水晶","寒冰","流星","烈日","大树","荆棘","钢铁"]
+        fm_tp = {"满月": "./image/满月.png", "轻风": "./image/轻风.png", "时钟": "./image/时钟.png",
+                 "怒涛": "./image/怒涛.png", "魔术": "./image/魔术.png", "顽石": "./image/顽石.png",
+                 "水晶": "./image/水晶.png", "寒冰": "./image/寒冰.png", "流星": "./image/流星.png",
+                 "烈日": "./image/烈日.png", "大树": "./image/大树.png", "荆棘": "./image/荆棘.png",
+                 "钢铁": "./image/钢铁.png"}
         gm_fm_1 = st.selectbox("第一个共鸣2件套",options_fm)
+
+        if gm_fm_1 != "无":
+            fm1_image_url1 = fm_tp[gm_fm_1]  # 获取头像链接列的值
+            fm1_image_url2 = fm_tp[gm_fm_1]  # 获取头像链接列的值
+            # 调整头像大小
+            column291,column292 = st.columns([1,1])
+            with column291:
+                st.image(fm1_image_url1, width=35)  # 设置宽度为35像素
+            with column292:
+                st.image(fm1_image_url2, width=35)  # 设置宽度为35像素
         gm_fm_2 = st.selectbox("第二个共鸣2件套",options_fm)
+        if gm_fm_2 != "无":
+            fm2_image_url1 = fm_tp[gm_fm_2]  # 获取头像链接列的值
+            fm2_image_url2 = fm_tp[gm_fm_2]  # 获取头像链接列的值
+            # 调整头像大小
+            column281, column282 = st.columns([1, 1])
+            with column281:
+                st.image(fm2_image_url1, width=35)  # 设置宽度为35像素
+            with column282:
+                st.image(fm2_image_url2, width=35)  # 设置宽度为35像素
 
         gm_fm_jc_1 = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0}
         gm_fm_jc_2 = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0}
@@ -496,73 +653,24 @@ with tab4:
             st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {zw["技巧"]}</span></strong>",unsafe_allow_html=True)
 
 with tab5:
-    # 神契神力石板加成 字典
-    sq_slsb_dict = {
-        "未携带": {"生命": 0, "攻击": 0, "智力": 0, "防御": 0, "魔防": 0, "技巧": 0, "士兵生命": 0, "士兵攻击": 0, "士兵防御": 0, "士兵魔防": 0},
-        "索尔": {"生命": 360, "攻击": 45, "智力": 45, "防御": 30, "魔防": 30, "技巧": 10, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "菲依雅": {"生命": 180, "攻击": 18, "智力": 75, "防御": 28, "魔防": 50, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "海姆达尔": {"生命": 500, "攻击": 24, "智力": 18, "防御": 82, "魔防": 6, "技巧": 5, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "巴德尔": {"生命": 380, "攻击": 21, "智力": 72, "防御": 46, "魔防": 12, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "奥丁": {"生命": 300, "攻击": 93, "智力": 12, "防御": 36, "魔防": 10, "技巧": 15, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "弗丽嘉": {"生命": 420, "攻击": 18, "智力": 27, "防御": 8, "魔防": 86, "技巧": 5, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "提尔": {"生命": 460, "攻击": 96, "智力": 18, "防御": 28, "魔防": 10, "技巧": 8, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "洛基": {"生命": 400, "攻击": 12, "智力": 120, "防御": 10, "魔防": 18, "技巧": 10, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06},
-        "维达": {"生命": 400, "攻击": 69, "智力": 21, "防御": 14, "魔防": 44, "技巧": 9, "士兵生命": 0.06, "士兵攻击": 0.06, "士兵防御": 0.06, "士兵魔防": 0.06}
-    }
-    # 用户选择框
-    selected_sq = st.selectbox("请选择神契", list(sq_slsb_dict.keys()))
-    # 更新 神契神力石板加成
-    if selected_sq and selected_sq in sq_slsb_dict:
-        sq_slsb = sq_slsb_dict[selected_sq]
+    st.markdown(f"<span style='color:red;font-size:15px;'>请提前在「神契设置区」设置好神契</span>",unsafe_allow_html=True)
 
-    with st.expander("（点击打开输入自己的）神契晨曦之祝加成"):
-        column51,column52 = st.columns([0.5,1])
-        with column51:
-            st.write("### 神力石板加成")
-            st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["生命"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["攻击"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["智力"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["防御"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["魔防"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["技巧"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 士兵生命: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["士兵生命"]*100}% </span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 士兵攻击: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["士兵攻击"]*100}% </span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 士兵防御: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["士兵防御"]*100}% </span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 士兵魔防: <strong><span style='color:green;font-size:25px;'> + {sq_slsb["士兵魔防"]*100}% </span></strong>",unsafe_allow_html=True)
+    column569, column568, column567 = st.columns([0.5,1,1])
+    with column569:
+        # 用户选择框
+        list_zdsq = ["未携带","索尔","菲依雅","海姆达尔","巴德尔","奥丁","弗丽嘉","提尔","洛基","维达"]
+        selected_sq = st.selectbox("请选择神契",list_zdsq)
+    with column568:
+        # 显示英雄头像
+        sqzd_image_url = sq_tp[selected_sq]  # 获取头像链接列的值
+        # 调整头像大小
+        st.image(sqzd_image_url,width=120)  # 设置宽度为120像素
 
-        with column52:
-            st.write("### 晨曦之祝加成")
-            # 神契晨曦之祝加成
-            column521, column522 = st.columns([1, 1])
-            with column521:
-                sq_cxzz["生命"] = st.number_input("生命（最大值600）", value=0)  # 生命晨曦绿字
-                sq_cxzz["攻击"] = st.number_input("攻击（最大值75）", value=0)  # 攻击晨曦绿字
-                sq_cxzz["智力"] = st.number_input("智力（最大值75）", value=0)  # 智力晨曦绿字
-            with column522:
-                sq_cxzz["防御"] = st.number_input("防御（最大值60）", value=0)  # 防御晨曦绿字
-                sq_cxzz["魔防"] = st.number_input("魔防（最大值60）", value=0)  # 魔防晨曦绿字
-                sq_cxzz["技巧"] = st.number_input("技巧（最大值0）", value=0)  # 技巧晨曦绿字
-            sq_cxzz_sbgd["士兵生命"] = st.text_input("士兵生命%（最大值18%）", value=0)  # 士兵生命晨曦加成百分比
-            sq_cxzz_sbgd["士兵攻击"] = st.text_input("士兵攻击%（最大值18%）", value=0)  # 士兵攻击晨曦加成百分比
-            sq_cxzz_sbgd["士兵防御"] = st.text_input("士兵防御%（最大值18%）", value=0)  # 士兵防御晨曦加成百分比
-            sq_cxzz_sbgd["士兵魔防"] = st.text_input("士兵魔防%（最大值18%）", value=0)  # 士兵魔防晨曦加成百分比
-            sq_cxzz["士兵生命"] = bfb_shuru(sq_cxzz_sbgd["士兵生命"])
-            sq_cxzz["士兵攻击"] = bfb_shuru(sq_cxzz_sbgd["士兵攻击"])
-            sq_cxzz["士兵防御"] = bfb_shuru(sq_cxzz_sbgd["士兵防御"])
-            sq_cxzz["士兵魔防"] = bfb_shuru(sq_cxzz_sbgd["士兵魔防"])
-
-    st.write("### 神契总加成")
-    # 神契总加成
-    sq_zjc["生命"] = sq_slsb["生命"] + sq_cxzz["生命"]
-    sq_zjc["攻击"] = sq_slsb["攻击"] + sq_cxzz["攻击"]
-    sq_zjc["智力"] = sq_slsb["智力"] + sq_cxzz["智力"]
-    sq_zjc["防御"] = sq_slsb["防御"] + sq_cxzz["防御"]
-    sq_zjc["魔防"] = sq_slsb["魔防"] + sq_cxzz["魔防"]
-    sq_zjc["技巧"] = sq_slsb["技巧"] + sq_cxzz["技巧"]
-    sq_zjc["士兵生命"] = sq_slsb["士兵生命"] + sq_cxzz["士兵生命"]
-    sq_zjc["士兵攻击"] = sq_slsb["士兵攻击"] + sq_cxzz["士兵攻击"]
-    sq_zjc["士兵防御"] = sq_slsb["士兵防御"] + sq_cxzz["士兵防御"]
-    sq_zjc["士兵魔防"] = sq_slsb["士兵魔防"] + sq_cxzz["士兵魔防"]
+    # 获取选中的神契的总加成
+    if selected_sq != "未携带":
+        sq_zjc = result_dict[selected_sq]
+    else:
+        sq_zjc = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0,"士兵生命":0,"士兵攻击":0,"士兵防御":0,"士兵魔防":0}
 
     column53, column54 = st.columns([1, 1])
     with column53:
@@ -607,11 +715,11 @@ lz_jc_data = {
     "装备基础": list(zb_jc.values()),
     "附魔百分比": [f"{round(value*100)}%" for value in fm_bfb.values()]+["-"] ,
     "附魔百分比*白字": [
-        bz["生命"]*fm_bfb["生命"],
-        bz["攻击"]*fm_bfb["攻击"],
-        bz["智力"]*fm_bfb["智力"],
-        bz["防御"]*fm_bfb["防御"],
-        bz["魔防"]*fm_bfb["魔防"],
+        round(bz["生命"]*fm_bfb["生命"],1),
+        round(bz["攻击"]*fm_bfb["攻击"],1),
+        round(bz["智力"]*fm_bfb["智力"],1),
+        round(bz["防御"]*fm_bfb["防御"],1),
+        round(bz["魔防"]*fm_bfb["魔防"],1),
         "-",
     ],
     "附魔固定值": list(fm_gdz.values())+["-"],
@@ -633,31 +741,43 @@ df1 = pd.DataFrame(lz_jc_data, index=["生命", "攻击", "智力", "防御", "�
 # 显示为DataFrame
 st.dataframe(df1,use_container_width=True)
 
+st.image("./image/分割图片.png")  # 设置宽度为150像素
+
 # 分割线
 st.divider()
 
-st.write("### 英雄战场面板模拟")
+st.write("## 英雄战场面板模拟")
 
-# 分割线
+sdsr_pd = st.checkbox("默认关联读取以上英雄模拟结果 (想手动输入 进行下面模拟 就取消勾选)", value=True)
+
 st.divider()
 
 column74, column75 = st.columns([1, 1])
-with column74:
-    #计算英雄的白+绿
-    bjl["生命"] = bz["生命"] + lz["生命"]
-    bjl["攻击"] = bz["攻击"] + lz["攻击"]
-    bjl["智力"] = bz["智力"] + lz["智力"]
-    bjl["防御"] = bz["防御"] + lz["防御"]
-    bjl["魔防"] = bz["魔防"] + lz["魔防"]
-    bjl["技巧"] = bz["技巧"] + lz["技巧"]
 
+with column74:
     st.write("### 英雄的白+绿面板")
-    st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> {bjl["生命"]}</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> {bjl["攻击"]}</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> {bjl["智力"]}</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> {bjl["防御"]}</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> {bjl["魔防"]}</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> {bjl["技巧"]}</span></strong>",unsafe_allow_html=True)
+    if sdsr_pd:
+        #计算英雄的白+绿
+        bjl["生命"] = bz["生命"] + lz["生命"]
+        bjl["攻击"] = bz["攻击"] + lz["攻击"]
+        bjl["智力"] = bz["智力"] + lz["智力"]
+        bjl["防御"] = bz["防御"] + lz["防御"]
+        bjl["魔防"] = bz["魔防"] + lz["魔防"]
+        bjl["技巧"] = bz["技巧"] + lz["技巧"]
+
+        st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> {bjl["生命"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> {bjl["攻击"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> {bjl["智力"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> {bjl["防御"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> {bjl["魔防"]}</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> {bjl["技巧"]}</span></strong>",unsafe_allow_html=True)
+    else:
+        bjl["生命"] = mb_shuru(st.text_input("生命", key="bjl_sm", value="0"))
+        bjl["攻击"] = mb_shuru(st.text_input("攻击", key="bjl_gj", value="0"))
+        bjl["智力"] = mb_shuru(st.text_input("智力", key="bjl_zl", value="0"))
+        bjl["防御"] = mb_shuru(st.text_input("防御", key="bjl_fy", value="0"))
+        bjl["魔防"] = mb_shuru(st.text_input("魔防", key="bjl_mf", value="0"))
+        bjl["技巧"] = mb_shuru(st.text_input("技巧", key="bjl_jq", value="0"))
 
 with column75:
     st.write("### 英雄竞技精通区")
@@ -665,7 +785,7 @@ with column75:
     with column71:
         st.write("")
         options_jjjt_sfm = ["默认满", "自定义"]
-        jjjt_sfm = st.radio("竞技精通是否满值",options_jjjt_sfm,index=options_jjjt_sfm.index(jjjt_sfm))
+        jjjt_sfm = st.radio("竞技精通是否满值",options_jjjt_sfm)
     with column72:
         if jjjt_sfm == "默认满":
             jjjt["生命"] = 500
@@ -737,50 +857,60 @@ with column82:
     st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(cjtx["技巧"]*100)}%</span></strong>",unsafe_allow_html=True)
 
 with column83:
-    if gm_fm_1 == "满月" and gm_fm_2 == "满月":
-        st.write("#### 附魔：满月")
-        fm4jc["攻击"] = 0.1
-        fm4jc["智力"] = 0.1
-        fm4jc["防御"] = 0.1
-        fm4jc["魔防"] = 0.1
-    elif gm_fm_1 == "怒涛" and gm_fm_2 == "怒涛":
-        st.write("#### 附魔：怒涛")
-        fm4jc["攻击"] = 0.1
-    elif gm_fm_1 == "大树" and gm_fm_2 == "大树":
-        st.write("#### 附魔：大树")
-        fm4jc["防御"] = 0.05
-        fm4jc["魔防"] = 0.05
-    else:
-        st.write("#### 附魔无加成")
-        fm4jc["生命"] = 0
-        fm4jc["攻击"] = 0
-        fm4jc["智力"] = 0
-        fm4jc["防御"] = 0
-        fm4jc["魔防"] = 0
-        fm4jc["技巧"] = 0
+    if sdsr_pd:
+        if gm_fm_1 == "满月" and gm_fm_2 == "满月":
+            st.write("#### 附魔：满月")
+            fm4jc["攻击"] = 0.1
+            fm4jc["智力"] = 0.1
+            fm4jc["防御"] = 0.1
+            fm4jc["魔防"] = 0.1
+        elif gm_fm_1 == "怒涛" and gm_fm_2 == "怒涛":
+            st.write("#### 附魔：怒涛")
+            fm4jc["攻击"] = 0.1
+        elif gm_fm_1 == "大树" and gm_fm_2 == "大树":
+            st.write("#### 附魔：大树")
+            fm4jc["防御"] = 0.05
+            fm4jc["魔防"] = 0.05
+        else:
+            st.write("#### 附魔无加成")
+            fm4jc["生命"] = 0
+            fm4jc["攻击"] = 0
+            fm4jc["智力"] = 0
+            fm4jc["防御"] = 0
+            fm4jc["魔防"] = 0
+            fm4jc["技巧"] = 0
 
-    st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> +{round(fm4jc["生命"]*100)}%</span></strong>",unsafe_allow_html=True)
-    if gm_fm_1 == "满月" and gm_fm_2 == "满月":
-        st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
-    elif gm_fm_1 == "怒涛" and gm_fm_2 == "怒涛":
-        st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
-        st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
-    elif gm_fm_1 == "大树" and gm_fm_2 == "大树":
-        st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 生命: <strong><span style='font-size:25px;'> +{round(fm4jc["生命"]*100)}%</span></strong>",unsafe_allow_html=True)
+        if gm_fm_1 == "满月" and gm_fm_2 == "满月":
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
+        elif gm_fm_1 == "怒涛" and gm_fm_2 == "怒涛":
+            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["攻击"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(fm4jc["防御"] * 100)}%</span></strong>", unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(fm4jc["魔防"] * 100)}%</span></strong>", unsafe_allow_html=True)
+        elif gm_fm_1 == "大树" and gm_fm_2 == "大树":
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> +{round(fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        else:
+            st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
+            st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
+        st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(fm4jc["技巧"]*100)}%</span></strong>",unsafe_allow_html=True)
     else:
-        st.markdown(f"#### 攻击: <strong><span style='font-size:25px;'> +{round(fm4jc["攻击"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 智力: <strong><span style='font-size:25px;'> +{round(fm4jc["智力"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 防御: <strong><span style='font-size:25px;'> +{round(fm4jc["防御"]*100)}%</span></strong>",unsafe_allow_html=True)
-        st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> +{round(fm4jc["魔防"]*100)}%</span></strong>",unsafe_allow_html=True)
-    st.markdown(f"#### 技巧: <strong><span style='font-size:25px;'> +{round(fm4jc["技巧"]*100)}%</span></strong>",unsafe_allow_html=True)
+        st.write("#### 附魔加成")
+        fm4jc["生命"] = bfb_shuru(st.text_input("生命%", key="fm4jc_sm", value="0"))
+        fm4jc["攻击"] = bfb_shuru(st.text_input("攻击%", key="fm4jc_gj", value="0"))
+        fm4jc["智力"] = bfb_shuru(st.text_input("智力%", key="fm4jc_zl", value="0"))
+        fm4jc["防御"] = bfb_shuru(st.text_input("防御%", key="fm4jc_fy", value="0"))
+        fm4jc["魔防"] = bfb_shuru(st.text_input("魔防%", key="fm4jc_mf", value="0"))
+        fm4jc["技巧"] = bfb_shuru(st.text_input("技巧%", key="fm4jc_jq", value="0"))
+
 
 with column84:
     st.write("#### 战场其他加成")
@@ -1020,13 +1150,13 @@ with column93:
         st.markdown(f"#### 魔防: <strong><span style='font-size:25px;'> {yx_zdmb_zz["魔防"]}</span></strong>",unsafe_allow_html=True)
 
 # 分割线
-st.divider()
+#st.divider()
 
-st.write("### 英雄兵修区（未开发）")
-sm_bx = st.number_input("生命-兵修", 0)  # 生命兵修
-gj_bx = st.number_input("攻击-兵修", 0)  # 攻击兵修
-fy_bx = st.number_input("防御-兵修", 0)  # 防御兵修
-mf_bx = st.number_input("魔防-兵修", 0)  # 魔防兵修
+#st.write("### 英雄兵修区（未开发）")
+#sm_bx = st.number_input("生命-兵修", 0)  # 生命兵修
+#gj_bx = st.number_input("攻击-兵修", 0)  # 攻击兵修
+#fy_bx = st.number_input("防御-兵修", 0)  # 防御兵修
+#mf_bx = st.number_input("魔防-兵修", 0)  # 魔防兵修
 
 
 
