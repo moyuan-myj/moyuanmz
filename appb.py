@@ -94,12 +94,13 @@ yx_zl_zhxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}
 yx_fy_zhxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄防御转化系数 字典
 yx_mf_zhxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄魔防转化系数 字典
 yx_jq_zhxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄技巧转化系数 字典
-yx_sm_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄生命转化系数 过渡 字典
-yx_gj_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄攻击转化系数 过渡 字典
-yx_zl_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄智力转化系数 过渡 字典
-yx_fy_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄防御转化系数 过渡 字典
-yx_mf_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄魔防转化系数 过渡 字典
-yx_jq_zhxs_gd = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄技巧转化系数 过渡 字典
+yx_sx_dtl = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄属性代替量 字典
+yx_sm_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄生命代替系数 字典
+yx_gj_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄攻击代替系数 字典
+yx_zl_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄智力代替系数 字典
+yx_fy_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄防御代替系数 字典
+yx_mf_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄魔防代替系数 字典
+yx_jq_dtxs = {"生命":0,"攻击":0,"智力":0,"防御":0,"魔防":0,"技巧":0}  # 初始化英雄技巧代替系数 字典
 
 # 初始化附魔选取的列表
 wq_sm_bfb_percentages10 = ["10%","9%","8%","7%","6%","5%","4%","3%","2%","1%","0%"]
@@ -552,59 +553,39 @@ with tab3:
 with tab4:
     column41, column42, column43 = st.columns([0.8, 1, 0.3])
     with column41:
-        options_zw_xz = ["无", "攻击英雄", "智力英雄", "双修英雄(火男、黑骑士)", "双修英雄(阿卡娅)","自定义铸纹"]
+        options_zw_xz = ["默认关联选择的英雄","自定义铸纹"]
         zw_xz = st.radio("选择铸纹类型（默认满级）", options_zw_xz)
     with column42:
-        if zw_xz == "无":
-            zw["生命"] = 0
-            zw["攻击"] = 0
-            zw["智力"] = 0
-            zw["防御"] = 0
-            zw["魔防"] = 0
-            zw["技巧"] = 0
-        elif zw_xz == "攻击英雄":
-            zw["生命"] = 1000
-            zw["攻击"] = 150
-            zw["智力"] = 30
-            zw["防御"] = 90
-            zw["魔防"] = 90
-            zw["技巧"] = 20
-        elif zw_xz == "智力英雄":
-            zw["生命"] = 1000
-            zw["攻击"] = 30
-            zw["智力"] = 150
-            zw["防御"] = 90
-            zw["魔防"] = 90
-            zw["技巧"] = 20
-        elif zw_xz == "双修英雄(火男、黑骑士)":
-            zw["生命"] = 800
-            zw["攻击"] = 150
-            zw["智力"] = 110
-            zw["防御"] = 90
-            zw["魔防"] = 90
-            zw["技巧"] = 20
-        elif zw_xz == "双修英雄(阿卡娅)":
-            zw["生命"] = 800
-            zw["攻击"] = 110
-            zw["智力"] = 150
-            zw["防御"] = 90
-            zw["魔防"] = 90
-            zw["技巧"] = 20
-        elif zw_xz == "自定义铸纹":
+        if zw_xz == "默认关联选择的英雄":
+            if selected_hero == "自定义英雄":
+                zw["生命"] = st.number_input("生命-铸纹加成", value=0)  # 生命铸纹绿字
+                zw["攻击"] = st.number_input("攻击-铸纹加成", value=0)  # 攻击铸纹绿字
+                zw["智力"] = st.number_input("智力-铸纹加成", value=0)  # 智力铸纹绿字
+                zw["防御"] = st.number_input("防御-铸纹加成", value=0)  # 防御铸纹绿字
+                zw["魔防"] = st.number_input("魔防-铸纹加成", value=0)  # 魔防铸纹绿字
+                zw["技巧"] = st.number_input("技巧-铸纹加成", value=0)  # 技巧铸纹绿字
+            else:
+                zw = {
+                    "生命": selected_row["铸纹生命"],
+                    "攻击": selected_row["铸纹攻击"],
+                    "智力": selected_row["铸纹智力"],
+                    "防御": selected_row["铸纹防御"],
+                    "魔防": selected_row["铸纹魔防"],
+                    "技巧": selected_row["铸纹技巧"],
+                }
+                st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> + {zw["生命"]}</span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> + {zw["攻击"]}</span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> + {zw["智力"]}</span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> + {zw["防御"]}</span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> + {zw["魔防"]}</span></strong>",unsafe_allow_html=True)
+                st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {zw["技巧"]}</span></strong>",unsafe_allow_html=True)
+        else:
             zw["生命"] = st.number_input("生命-铸纹加成", value=0)  # 生命铸纹绿字
             zw["攻击"] = st.number_input("攻击-铸纹加成", value=0)  # 攻击铸纹绿字
             zw["智力"] = st.number_input("智力-铸纹加成", value=0)  # 智力铸纹绿字
             zw["防御"] = st.number_input("防御-铸纹加成", value=0)  # 防御铸纹绿字
             zw["魔防"] = st.number_input("魔防-铸纹加成", value=0)  # 魔防铸纹绿字
             zw["技巧"] = st.number_input("技巧-铸纹加成", value=0)  # 技巧铸纹绿字
-
-        if zw_xz != "自定义铸纹":
-            st.markdown(f"#### 生命: <strong><span style='color:green;font-size:25px;'> + {zw["生命"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> + {zw["攻击"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 智力: <strong><span style='color:green;font-size:25px;'> + {zw["智力"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 防御: <strong><span style='color:green;font-size:25px;'> + {zw["防御"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 魔防: <strong><span style='color:green;font-size:25px;'> + {zw["魔防"]}</span></strong>",unsafe_allow_html=True)
-            st.markdown(f"#### 技巧: <strong><span style='color:green;font-size:25px;'> + {zw["技巧"]}</span></strong>",unsafe_allow_html=True)
 
 with tab5:
     st.markdown(f"<span style='color:red;font-size:15px;'>请提前在「神契设置区」设置好神契</span>",unsafe_allow_html=True)
@@ -695,6 +676,19 @@ df1 = pd.DataFrame(lz_jc_data, index=["生命", "攻击", "智力", "防御", "�
 # 显示为DataFrame
 st.dataframe(df1,use_container_width=True)
 
+column001, column002 = st.columns([0.5,1])
+
+with column001:
+    st.write("")
+    st.image(hero_image_url, caption=selected_hero, width=150)  # 设置宽度为150像素
+with column002:
+    st.markdown(f"#### 生命: {bz["生命"]} <strong><span style='color:green;font-size:25px;'> + {lz["生命"]}</span></strong>",unsafe_allow_html=True)
+    st.markdown(f"#### 攻击: {bz["攻击"]} <strong><span style='color:green;font-size:25px;'> + {lz["攻击"]}</span></strong>",unsafe_allow_html=True)
+    st.markdown(f"#### 智力: {bz["智力"]} <strong><span style='color:green;font-size:25px;'> + {lz["智力"]}</span></strong>",unsafe_allow_html=True)
+    st.markdown(f"#### 防御: {bz["防御"]} <strong><span style='color:green;font-size:25px;'> + {lz["防御"]}</span></strong>",unsafe_allow_html=True)
+    st.markdown(f"#### 魔防: {bz["魔防"]} <strong><span style='color:green;font-size:25px;'> + {lz["魔防"]}</span></strong>",unsafe_allow_html=True)
+    st.markdown(f"#### 技巧: {bz["技巧"]} <strong><span style='color:green;font-size:25px;'> + {lz["技巧"]}</span></strong>",unsafe_allow_html=True)
+
 st.image("./image/分割图片.png")  # 设置宽度为150像素
 
 # 分割线
@@ -755,12 +749,12 @@ with column75:
             st.markdown(f"#### 魔防: <strong><span style='color:orange;font-size:25px;'> + {jjjt["魔防"]}</span></strong>",unsafe_allow_html=True)
             st.markdown(f"#### 技巧: <strong><span style='color:orange;font-size:25px;'> + {jjjt["技巧"]}</span></strong>",unsafe_allow_html=True)
         else:
-            zyjt["生命"] = st.number_input("生命-竞技精通", value=500)  # 生命竞技精通
-            zyjt["攻击"] = st.number_input("攻击-竞技精通", value=60)  # 攻击竞技精通
-            zyjt["智力"] = st.number_input("智力-竞技精通", value=60)  # 智力竞技精通
-            zyjt["防御"] = st.number_input("防御-竞技精通", value=50)  # 防御竞技精通
-            zyjt["魔防"] = st.number_input("魔防-竞技精通", value=50)  # 魔防竞技精通
-            zyjt["技巧"] = st.number_input("技巧-竞技精通", value=80)  # 技巧竞技精通
+            jjjt["生命"] = st.number_input("生命-竞技精通", value=500)  # 生命竞技精通
+            jjjt["攻击"] = st.number_input("攻击-竞技精通", value=60)  # 攻击竞技精通
+            jjjt["智力"] = st.number_input("智力-竞技精通", value=60)  # 智力竞技精通
+            jjjt["防御"] = st.number_input("防御-竞技精通", value=50)  # 防御竞技精通
+            jjjt["魔防"] = st.number_input("魔防-竞技精通", value=50)  # 魔防竞技精通
+            jjjt["技巧"] = st.number_input("技巧-竞技精通", value=80)  # 技巧竞技精通
 
 # 分割线
 st.divider()
@@ -953,114 +947,142 @@ else:
     yx_zdmb["技巧"] = round(bjl["技巧"]*(1+zd_zjc["技巧"]),1)
 
 with st.expander("是否存在 攻转防 防转攻"):
-    options_zh_pd = ["增加到某属性", "代替某属性"]
-    zh_pd = st.radio("请选择转化方式", options_zh_pd)
+
+    # 分割线
+    column003,column004 = st.columns([0.5,1])
+    with column003:
+        zh_pd_fj = st.checkbox("增加到某属性")
+    with column004:
+        if zh_pd_fj:
+            yx_sm_fj = st.checkbox("生命进行转化")
+            if yx_sm_fj:
+                yx_sm_zhxs["攻击"] = bfb_shuru(st.text_input("生命转化攻击系数%", value=0))
+                yx_sm_zhxs["智力"] = bfb_shuru(st.text_input("生命转化智力系数%", value=0))
+                yx_sm_zhxs["防御"] = bfb_shuru(st.text_input("生命转化防御系数%", value=0))
+                yx_sm_zhxs["魔防"] = bfb_shuru(st.text_input("生命转化魔防系数%", value=0))
+                yx_sm_zhxs["技巧"] = bfb_shuru(st.text_input("生命转化技巧系数%", value=0))
+            yx_gj_fj = st.checkbox("攻击进行转化")
+            if yx_gj_fj:
+                yx_gj_zhxs["生命"] = bfb_shuru(st.text_input("攻击转化生命系数%", value=0))
+                yx_gj_zhxs["智力"] = bfb_shuru(st.text_input("攻击转化智力系数%", value=0))
+                yx_gj_zhxs["防御"] = bfb_shuru(st.text_input("攻击转化防御系数%", value=0))
+                yx_gj_zhxs["魔防"] = bfb_shuru(st.text_input("攻击转化魔防系数%", value=0))
+                yx_gj_zhxs["技巧"] = bfb_shuru(st.text_input("攻击转化技巧系数%", value=0))
+            yx_zl_fj = st.checkbox("智力进行转化")
+            if yx_zl_fj:
+                yx_zl_zhxs["生命"] = bfb_shuru(st.text_input("智力转化生命系数%", value=0))
+                yx_zl_zhxs["攻击"] = bfb_shuru(st.text_input("智力转化攻击系数%", value=0))
+                yx_zl_zhxs["防御"] = bfb_shuru(st.text_input("智力转化防御系数%", value=0))
+                yx_zl_zhxs["魔防"] = bfb_shuru(st.text_input("智力转化魔防系数%", value=0))
+                yx_zl_zhxs["技巧"] = bfb_shuru(st.text_input("智力转化技巧系数%", value=0))
+            yx_fy_fj = st.checkbox("防御进行转化")
+            if yx_fy_fj:
+                yx_fy_zhxs["生命"] = bfb_shuru(st.text_input("防御转化生命系数%", value=0))
+                yx_fy_zhxs["攻击"] = bfb_shuru(st.text_input("防御转化攻击系数%", value=0))
+                yx_fy_zhxs["智力"] = bfb_shuru(st.text_input("防御转化智力系数%", value=0))
+                yx_fy_zhxs["魔防"] = bfb_shuru(st.text_input("防御转化魔防系数%", value=0))
+                yx_fy_zhxs["技巧"] = bfb_shuru(st.text_input("防御转化技巧系数%", value=0))
+            yx_mf_fj = st.checkbox("魔防进行转化")
+            if yx_mf_fj:
+                yx_mf_zhxs["生命"] = bfb_shuru(st.text_input("魔防转化生命系数%", value=0))
+                yx_mf_zhxs["攻击"] = bfb_shuru(st.text_input("魔防转化攻击系数%", value=0))
+                yx_mf_zhxs["智力"] = bfb_shuru(st.text_input("魔防转化智力系数%", value=0))
+                yx_mf_zhxs["防御"] = bfb_shuru(st.text_input("魔防转化防御系数%", value=0))
+                yx_mf_zhxs["技巧"] = bfb_shuru(st.text_input("魔防转化技巧系数%", value=0))
+            yx_jq_fj = st.checkbox("技巧进行转化")
+            if yx_jq_fj:
+                yx_jq_zhxs["生命"] = bfb_shuru(st.text_input("技巧转化生命系数%", value=0))
+                yx_jq_zhxs["攻击"] = bfb_shuru(st.text_input("技巧转化攻击系数%", value=0))
+                yx_jq_zhxs["智力"] = bfb_shuru(st.text_input("技巧转化智力系数%", value=0))
+                yx_jq_zhxs["防御"] = bfb_shuru(st.text_input("技巧转化防御系数%", value=0))
+                yx_jq_zhxs["魔防"] = bfb_shuru(st.text_input("技巧转化魔防系数%", value=0))
+
+            yx_sx_zhl["生命"] = yx_zdmb["攻击"]*yx_gj_zhxs["生命"] + yx_zdmb["智力"]*yx_zl_zhxs["生命"] + yx_zdmb["防御"]*yx_fy_zhxs["生命"] + yx_zdmb["魔防"]*yx_mf_zhxs["生命"]+ yx_zdmb["技巧"]*yx_jq_zhxs["生命"]
+            yx_sx_zhl["攻击"] = yx_zdmb["生命"]*yx_sm_zhxs["攻击"] + yx_zdmb["智力"]*yx_zl_zhxs["攻击"] + yx_zdmb["防御"]*yx_fy_zhxs["攻击"] + yx_zdmb["魔防"]*yx_mf_zhxs["攻击"]+ yx_zdmb["技巧"]*yx_jq_zhxs["攻击"]
+            yx_sx_zhl["智力"] = yx_zdmb["生命"]*yx_sm_zhxs["智力"] + yx_zdmb["攻击"]*yx_gj_zhxs["智力"] + yx_zdmb["防御"]*yx_fy_zhxs["智力"] + yx_zdmb["魔防"]*yx_mf_zhxs["智力"]+ yx_zdmb["技巧"]*yx_jq_zhxs["智力"]
+            yx_sx_zhl["防御"] = yx_zdmb["生命"]*yx_sm_zhxs["防御"] + yx_zdmb["攻击"]*yx_gj_zhxs["防御"] + yx_zdmb["智力"]*yx_zl_zhxs["防御"] + yx_zdmb["魔防"]*yx_mf_zhxs["防御"]+ yx_zdmb["技巧"]*yx_jq_zhxs["防御"]
+            yx_sx_zhl["魔防"] = yx_zdmb["生命"]*yx_sm_zhxs["魔防"] + yx_zdmb["攻击"]*yx_gj_zhxs["魔防"] + yx_zdmb["智力"]*yx_zl_zhxs["魔防"] + yx_zdmb["防御"]*yx_fy_zhxs["魔防"]+ yx_zdmb["技巧"]*yx_jq_zhxs["魔防"]
+            yx_sx_zhl["技巧"] = yx_zdmb["生命"]*yx_sm_zhxs["技巧"] + yx_zdmb["攻击"]*yx_gj_zhxs["技巧"] + yx_zdmb["智力"]*yx_zl_zhxs["技巧"] + yx_zdmb["防御"]*yx_fy_zhxs["技巧"]+ yx_zdmb["魔防"]*yx_mf_zhxs["技巧"]
 
     # 分割线
     st.divider()
+    column005, column006 = st.columns([0.5, 1])
+    with column005:
+        zh_pd_dt = st.checkbox("代替某属性")
+    with column006:
+        if zh_pd_dt:
+            yx_sm_dt = st.checkbox("生命进行代替")
+            if yx_sm_dt:
+                yx_sm_dtxs["攻击"] = bfb_shuru(st.text_input("生命代替攻击系数%", value=0))
+                yx_sm_dtxs["智力"] = bfb_shuru(st.text_input("生命代替智力系数%", value=0))
+                yx_sm_dtxs["防御"] = bfb_shuru(st.text_input("生命代替防御系数%", value=0))
+                yx_sm_dtxs["魔防"] = bfb_shuru(st.text_input("生命代替魔防系数%", value=0))
+                yx_sm_dtxs["技巧"] = bfb_shuru(st.text_input("生命代替技巧系数%", value=0))
+            yx_gj_dt = st.checkbox("攻击进行代替")
+            if yx_gj_dt:
+                yx_gj_dtxs["生命"] = bfb_shuru(st.text_input("攻击代替生命系数%", value=0))
+                yx_gj_dtxs["智力"] = bfb_shuru(st.text_input("攻击代替智力系数%", value=0))
+                yx_gj_dtxs["防御"] = bfb_shuru(st.text_input("攻击代替防御系数%", value=0))
+                yx_gj_dtxs["魔防"] = bfb_shuru(st.text_input("攻击代替魔防系数%", value=0))
+                yx_gj_dtxs["技巧"] = bfb_shuru(st.text_input("攻击代替技巧系数%", value=0))
+            yx_zl_dt = st.checkbox("智力进行代替")
+            if yx_zl_dt:
+                yx_zl_dtxs["生命"] = bfb_shuru(st.text_input("智力代替生命系数%", value=0))
+                yx_zl_dtxs["攻击"] = bfb_shuru(st.text_input("智力代替攻击系数%", value=0))
+                yx_zl_dtxs["防御"] = bfb_shuru(st.text_input("智力代替防御系数%", value=0))
+                yx_zl_dtxs["魔防"] = bfb_shuru(st.text_input("智力代替魔防系数%", value=0))
+                yx_zl_dtxs["技巧"] = bfb_shuru(st.text_input("智力代替技巧系数%", value=0))
+            yx_fy_dt = st.checkbox("防御进行代替")
+            if yx_fy_dt:
+                yx_fy_dtxs["生命"] = bfb_shuru(st.text_input("防御代替生命系数%", value=0))
+                yx_fy_dtxs["攻击"] = bfb_shuru(st.text_input("防御代替攻击系数%", value=0))
+                yx_fy_dtxs["智力"] = bfb_shuru(st.text_input("防御代替智力系数%", value=0))
+                yx_fy_dtxs["魔防"] = bfb_shuru(st.text_input("防御代替魔防系数%", value=0))
+                yx_fy_dtxs["技巧"] = bfb_shuru(st.text_input("防御代替技巧系数%", value=0))
+            yx_mf_dt = st.checkbox("魔防进行代替")
+            if yx_mf_dt:
+                yx_mf_dtxs["生命"] = bfb_shuru(st.text_input("魔防代替生命系数%", value=0))
+                yx_mf_dtxs["攻击"] = bfb_shuru(st.text_input("魔防代替攻击系数%", value=0))
+                yx_mf_dtxs["智力"] = bfb_shuru(st.text_input("魔防代替智力系数%", value=0))
+                yx_mf_dtxs["防御"] = bfb_shuru(st.text_input("魔防代替防御系数%", value=0))
+                yx_mf_dtxs["技巧"] = bfb_shuru(st.text_input("魔防代替技巧系数%", value=0))
+            yx_jq_dt = st.checkbox("技巧进行代替")
+            if yx_jq_dt:
+                yx_jq_dtxs["生命"] = bfb_shuru(st.text_input("技巧代替生命系数%", value=0))
+                yx_jq_dtxs["攻击"] = bfb_shuru(st.text_input("技巧代替攻击系数%", value=0))
+                yx_jq_dtxs["智力"] = bfb_shuru(st.text_input("技巧代替智力系数%", value=0))
+                yx_jq_dtxs["防御"] = bfb_shuru(st.text_input("技巧代替防御系数%", value=0))
+                yx_jq_dtxs["魔防"] = bfb_shuru(st.text_input("技巧代替魔防系数%", value=0))
+            
+            yx_sx_dtl["生命"] = yx_zdmb["攻击"]*yx_gj_dtxs["生命"] + yx_zdmb["智力"]*yx_zl_dtxs["生命"] + yx_zdmb["防御"]*yx_fy_dtxs["生命"] + yx_zdmb["魔防"]*yx_mf_dtxs["生命"]+ yx_zdmb["技巧"]*yx_jq_dtxs["生命"]
+            yx_sx_dtl["攻击"] = yx_zdmb["生命"]*yx_sm_dtxs["攻击"] + yx_zdmb["智力"]*yx_zl_dtxs["攻击"] + yx_zdmb["防御"]*yx_fy_dtxs["攻击"] + yx_zdmb["魔防"]*yx_mf_dtxs["攻击"]+ yx_zdmb["技巧"]*yx_jq_dtxs["攻击"]
+            yx_sx_dtl["智力"] = yx_zdmb["生命"]*yx_sm_dtxs["智力"] + yx_zdmb["攻击"]*yx_gj_dtxs["智力"] + yx_zdmb["防御"]*yx_fy_dtxs["智力"] + yx_zdmb["魔防"]*yx_mf_dtxs["智力"]+ yx_zdmb["技巧"]*yx_jq_dtxs["智力"]
+            yx_sx_dtl["防御"] = yx_zdmb["生命"]*yx_sm_dtxs["防御"] + yx_zdmb["攻击"]*yx_gj_dtxs["防御"] + yx_zdmb["智力"]*yx_zl_dtxs["防御"] + yx_zdmb["魔防"]*yx_mf_dtxs["防御"]+ yx_zdmb["技巧"]*yx_jq_dtxs["防御"]
+            yx_sx_dtl["魔防"] = yx_zdmb["生命"]*yx_sm_dtxs["魔防"] + yx_zdmb["攻击"]*yx_gj_dtxs["魔防"] + yx_zdmb["智力"]*yx_zl_dtxs["魔防"] + yx_zdmb["防御"]*yx_fy_dtxs["魔防"]+ yx_zdmb["技巧"]*yx_jq_dtxs["魔防"]
+            yx_sx_dtl["技巧"] = yx_zdmb["生命"]*yx_sm_dtxs["技巧"] + yx_zdmb["攻击"]*yx_gj_dtxs["技巧"] + yx_zdmb["智力"]*yx_zl_dtxs["技巧"] + yx_zdmb["防御"]*yx_fy_dtxs["技巧"]+ yx_zdmb["魔防"]*yx_mf_dtxs["技巧"]
 
-    yx_sm_fj = st.checkbox("生命进行转化")
-    if yx_sm_fj:
-        yx_sm_zhxs_gd["攻击"] = st.text_input("生命转化攻击系数%", value=0)
-        yx_sm_zhxs["攻击"] = bfb_shuru(yx_sm_zhxs_gd["攻击"])
-        yx_sm_zhxs_gd["智力"] = st.text_input("生命转化智力系数%", value=0)
-        yx_sm_zhxs["智力"] = bfb_shuru(yx_sm_zhxs_gd["智力"])
-        yx_sm_zhxs_gd["防御"] = st.text_input("生命转化防御系数%", value=0)
-        yx_sm_zhxs["防御"] = bfb_shuru(yx_sm_zhxs_gd["防御"])
-        yx_sm_zhxs_gd["魔防"] = st.text_input("生命转化魔防系数%", value=0)
-        yx_sm_zhxs["魔防"] = bfb_shuru(yx_sm_zhxs_gd["魔防"])
-        yx_sm_zhxs_gd["技巧"] = st.text_input("生命转化技巧系数%", value=0)
-        yx_sm_zhxs["技巧"] = bfb_shuru(yx_sm_zhxs_gd["技巧"])
-    yx_gj_fj = st.checkbox("攻击进行转化")
-    if yx_gj_fj:
-        yx_gj_zhxs_gd["生命"] = st.text_input("攻击转化生命系数%", value=0)
-        yx_gj_zhxs["生命"] = bfb_shuru(yx_gj_zhxs_gd["生命"])
-        yx_gj_zhxs_gd["智力"] = st.text_input("攻击转化智力系数%", value=0)
-        yx_gj_zhxs["智力"] = bfb_shuru(yx_gj_zhxs_gd["智力"])
-        yx_gj_zhxs_gd["防御"] = st.text_input("攻击转化防御系数%", value=0)
-        yx_gj_zhxs["防御"] = bfb_shuru(yx_gj_zhxs_gd["防御"])
-        yx_gj_zhxs_gd["魔防"] = st.text_input("攻击转化魔防系数%", value=0)
-        yx_gj_zhxs["魔防"] = bfb_shuru(yx_gj_zhxs_gd["魔防"])
-        yx_gj_zhxs_gd["技巧"] = st.text_input("攻击转化技巧系数%", value=0)
-        yx_gj_zhxs["技巧"] = bfb_shuru(yx_gj_zhxs_gd["技巧"])
-    yx_zl_fj = st.checkbox("智力进行转化")
-    if yx_zl_fj:
-        yx_zl_zhxs_gd["生命"] = st.text_input("智力转化生命系数%", value=0)
-        yx_zl_zhxs["生命"] = bfb_shuru(yx_zl_zhxs_gd["生命"])
-        yx_zl_zhxs_gd["攻击"] = st.text_input("智力转化攻击系数%", value=0)
-        yx_zl_zhxs["攻击"] = bfb_shuru(yx_zl_zhxs_gd["攻击"])
-        yx_zl_zhxs_gd["防御"] = st.text_input("智力转化防御系数%", value=0)
-        yx_zl_zhxs["防御"] = bfb_shuru(yx_zl_zhxs_gd["防御"])
-        yx_zl_zhxs_gd["魔防"] = st.text_input("智力转化魔防系数%", value=0)
-        yx_zl_zhxs["魔防"] = bfb_shuru(yx_zl_zhxs_gd["魔防"])
-        yx_zl_zhxs_gd["技巧"] = st.text_input("智力转化技巧系数%", value=0)
-        yx_zl_zhxs["技巧"] = bfb_shuru(yx_zl_zhxs_gd["技巧"])
-    yx_fy_fj = st.checkbox("防御进行转化")
-    if yx_fy_fj:
-        yx_fy_zhxs_gd["生命"] = st.text_input("防御转化生命系数%", value=0)
-        yx_fy_zhxs["生命"] = bfb_shuru(yx_fy_zhxs_gd["生命"])
-        yx_fy_zhxs_gd["攻击"] = st.text_input("防御转化攻击系数%", value=0)
-        yx_fy_zhxs["攻击"] = bfb_shuru(yx_fy_zhxs_gd["攻击"])
-        yx_fy_zhxs_gd["智力"] = st.text_input("防御转化智力系数%", value=0)
-        yx_fy_zhxs["智力"] = bfb_shuru(yx_fy_zhxs_gd["智力"])
-        yx_fy_zhxs_gd["魔防"] = st.text_input("防御转化魔防系数%", value=0)
-        yx_fy_zhxs["魔防"] = bfb_shuru(yx_fy_zhxs_gd["魔防"])
-        yx_fy_zhxs_gd["技巧"] = st.text_input("防御转化技巧系数%", value=0)
-        yx_fy_zhxs["技巧"] = bfb_shuru(yx_fy_zhxs_gd["技巧"])
-    yx_mf_fj = st.checkbox("魔防进行转化")
-    if yx_mf_fj:
-        yx_mf_zhxs_gd["生命"] = st.text_input("魔防转化生命系数%", value=0)
-        yx_mf_zhxs["生命"] = bfb_shuru(yx_mf_zhxs_gd["生命"])
-        yx_mf_zhxs_gd["攻击"] = st.text_input("魔防转化攻击系数%", value=0)
-        yx_mf_zhxs["攻击"] = bfb_shuru(yx_mf_zhxs_gd["攻击"])
-        yx_mf_zhxs_gd["智力"] = st.text_input("魔防转化智力系数%", value=0)
-        yx_mf_zhxs["智力"] = bfb_shuru(yx_mf_zhxs_gd["智力"])
-        yx_mf_zhxs_gd["防御"] = st.text_input("魔防转化防御系数%", value=0)
-        yx_mf_zhxs["防御"] = bfb_shuru(yx_mf_zhxs_gd["防御"])
-        yx_mf_zhxs_gd["技巧"] = st.text_input("魔防转化技巧系数%", value=0)
-        yx_mf_zhxs["技巧"] = bfb_shuru(yx_mf_zhxs_gd["技巧"])
-    yx_jq_fj = st.checkbox("技巧进行转化")
-    if yx_jq_fj:
-        yx_jq_zhxs_gd["生命"] = st.text_input("技巧转化生命系数%", value=0)
-        yx_jq_zhxs["生命"] = bfb_shuru(yx_jq_zhxs_gd["生命"])
-        yx_jq_zhxs_gd["攻击"] = st.text_input("技巧转化攻击系数%", value=0)
-        yx_jq_zhxs["攻击"] = bfb_shuru(yx_jq_zhxs_gd["攻击"])
-        yx_jq_zhxs_gd["智力"] = st.text_input("技巧转化智力系数%", value=0)
-        yx_jq_zhxs["智力"] = bfb_shuru(yx_jq_zhxs_gd["智力"])
-        yx_jq_zhxs_gd["防御"] = st.text_input("技巧转化防御系数%", value=0)
-        yx_jq_zhxs["防御"] = bfb_shuru(yx_jq_zhxs_gd["防御"])
-        yx_jq_zhxs_gd["魔防"] = st.text_input("技巧转化魔防系数%", value=0)
-        yx_jq_zhxs["魔防"] = bfb_shuru(yx_jq_zhxs_gd["魔防"])
-
-yx_sx_zhl["生命"] = yx_zdmb["攻击"]*yx_gj_zhxs["生命"] + yx_zdmb["智力"]*yx_zl_zhxs["生命"] + yx_zdmb["防御"]*yx_fy_zhxs["生命"] + yx_zdmb["魔防"]*yx_mf_zhxs["生命"]+ yx_zdmb["技巧"]*yx_jq_zhxs["生命"]
-yx_sx_zhl["攻击"] = yx_zdmb["生命"]*yx_sm_zhxs["攻击"] + yx_zdmb["智力"]*yx_zl_zhxs["攻击"] + yx_zdmb["防御"]*yx_fy_zhxs["攻击"] + yx_zdmb["魔防"]*yx_mf_zhxs["攻击"]+ yx_zdmb["技巧"]*yx_jq_zhxs["攻击"]
-yx_sx_zhl["智力"] = yx_zdmb["生命"]*yx_sm_zhxs["智力"] + yx_zdmb["攻击"]*yx_gj_zhxs["智力"] + yx_zdmb["防御"]*yx_fy_zhxs["智力"] + yx_zdmb["魔防"]*yx_mf_zhxs["智力"]+ yx_zdmb["技巧"]*yx_jq_zhxs["智力"]
-yx_sx_zhl["防御"] = yx_zdmb["生命"]*yx_sm_zhxs["防御"] + yx_zdmb["攻击"]*yx_gj_zhxs["防御"] + yx_zdmb["智力"]*yx_zl_zhxs["防御"] + yx_zdmb["魔防"]*yx_mf_zhxs["防御"]+ yx_zdmb["技巧"]*yx_jq_zhxs["防御"]
-yx_sx_zhl["魔防"] = yx_zdmb["生命"]*yx_sm_zhxs["魔防"] + yx_zdmb["攻击"]*yx_gj_zhxs["魔防"] + yx_zdmb["智力"]*yx_zl_zhxs["魔防"] + yx_zdmb["防御"]*yx_fy_zhxs["魔防"]+ yx_zdmb["技巧"]*yx_jq_zhxs["魔防"]
-yx_sx_zhl["技巧"] = yx_zdmb["生命"]*yx_sm_zhxs["技巧"] + yx_zdmb["攻击"]*yx_gj_zhxs["技巧"] + yx_zdmb["智力"]*yx_zl_zhxs["技巧"] + yx_zdmb["防御"]*yx_fy_zhxs["技巧"]+ yx_zdmb["魔防"]*yx_mf_zhxs["技巧"]
-
-if zh_pd == "增加到某属性":
-    yx_zdmb_zz["生命"] = yx_zdmb["生命"] + yx_sx_zhl["生命"]
-    yx_zdmb_zz["攻击"] = yx_zdmb["攻击"] + yx_sx_zhl["攻击"]
-    yx_zdmb_zz["智力"] = yx_zdmb["智力"] + yx_sx_zhl["智力"]
-    yx_zdmb_zz["防御"] = yx_zdmb["防御"] + yx_sx_zhl["防御"]
-    yx_zdmb_zz["魔防"] = yx_zdmb["魔防"] + yx_sx_zhl["魔防"]
-    yx_zdmb_zz["技巧"] = yx_zdmb["技巧"] + yx_sx_zhl["技巧"]
-else:
-    if yx_sx_zhl["生命"] != 0:
-        yx_zdmb_zz["生命"] = yx_sx_zhl["生命"]
-    if yx_sx_zhl["攻击"] != 0:
-        yx_zdmb_zz["攻击"] = yx_sx_zhl["攻击"]
-    if yx_sx_zhl["智力"] != 0:
-        yx_zdmb_zz["智力"] = yx_sx_zhl["智力"]
-    if yx_sx_zhl["防御"] != 0:
-        yx_zdmb_zz["防御"] = yx_sx_zhl["防御"]
-    if yx_sx_zhl["魔防"] != 0:
-        yx_zdmb_zz["魔防"] = yx_sx_zhl["魔防"]
-    if yx_sx_zhl["技巧"] != 0:
-        yx_zdmb_zz["技巧"] = yx_sx_zhl["技巧"]
+            if zh_pd_dt:
+                if yx_sx_dtl["生命"] != 0:
+                    yx_zdmb["生命"] = yx_sx_dtl["生命"]
+                if yx_sx_dtl["攻击"] != 0:
+                    yx_zdmb["攻击"] = yx_sx_dtl["攻击"]
+                if yx_sx_dtl["智力"] != 0:
+                    yx_zdmb["智力"] = yx_sx_dtl["智力"]
+                if yx_sx_dtl["防御"] != 0:
+                    yx_zdmb["防御"] = yx_sx_dtl["防御"]
+                if yx_sx_dtl["魔防"] != 0:
+                    yx_zdmb["魔防"] = yx_sx_dtl["魔防"]
+                if yx_sx_dtl["技巧"] != 0:
+                    yx_zdmb["技巧"] = yx_sx_dtl["技巧"]
 
 st.write("### 英雄的战场面板")
+
+yx_zdmb_zz["生命"] = yx_zdmb["生命"] + yx_sx_zhl["生命"]
+yx_zdmb_zz["攻击"] = yx_zdmb["攻击"] + yx_sx_zhl["攻击"]
+yx_zdmb_zz["智力"] = yx_zdmb["智力"] + yx_sx_zhl["智力"]
+yx_zdmb_zz["防御"] = yx_zdmb["防御"] + yx_sx_zhl["防御"]
+yx_zdmb_zz["魔防"] = yx_zdmb["魔防"] + yx_sx_zhl["魔防"]
+yx_zdmb_zz["技巧"] = yx_zdmb["技巧"] + yx_sx_zhl["技巧"]
 
 column91, column92, column93= st.columns([1, 1, 1])
 with column91:
@@ -1070,6 +1092,7 @@ with column91:
         st.markdown(f"### 生命: <strong><span style='color:red;font-size:35px;'> {yx_zdmb_zz["生命"]}</span></strong>",unsafe_allow_html=True)
     else:
         st.markdown(f"### 生命: <strong><span style='font-size:35px;'> {yx_zdmb_zz["生命"]}</span></strong>",unsafe_allow_html=True)
+    st.image(hero_image_url,width=90)  # 设置宽度为150像素
 with column92:
     if zd_zjc["攻击"] > 0 or yx_sx_zhl["攻击"]!= 0:
         st.markdown(f"#### 攻击: <strong><span style='color:green;font-size:25px;'> {yx_zdmb_zz["攻击"]}</span></strong>",unsafe_allow_html=True)
